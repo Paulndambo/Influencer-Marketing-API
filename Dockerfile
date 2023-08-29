@@ -1,4 +1,6 @@
-FROM python:3-alpine3.10
+# syntax=docker/dockerfile:1
+FROM python:slim-buster
+
 WORKDIR /app
 COPY . /app/
 
