@@ -142,4 +142,7 @@ REST_FRAMEWORK = {
 }
 
 
+CSRF_TRUSTED_ORIGINS = ["https://influencer-marketing-api.onrender.com"]
+
+
 CORS_ALLOW_ALL_ORIGINS = True
