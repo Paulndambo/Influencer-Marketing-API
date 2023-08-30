@@ -44,6 +44,7 @@ class GetAuthToken(ObtainAuthToken):
         user.save()
 
         response = {
+            "id": user.id,
             'token': token,
             'pk': user.pk,
             'role': user.role,

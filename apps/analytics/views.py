@@ -22,25 +22,31 @@ class PromotionCampaignViewSet(ModelViewSet):
         try:
             data = request.data
             product = data.get("product")
-            influencer = data.get("influencer")
+            user = data.get("user")
 
-            campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer}"
+            influencer = Influencer.objects.get(user_id=user)
+            campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer.id}"
+
+            campaign_object = {
+                "influencer_user_id": user,
+                "product_id": product,
+                "campaign_url": campaign_url
+            }
+            print(campaign_object)
 
             PromotionCampaign.objects.create(
-                influencer_id=influencer,
+                influencer=influencer,
                 product_id=product,
                 campaign_url=campaign_url
             )
 
             return Response({
                 "product": product,
-                "influencer": influencer,
+                "influencer": influencer.user.email,
                 "campaign_url": campaign_url
             }, status=status.HTTP_201_CREATED)
         except Exception as e:
             raise e
-
-
 
 
 class EngagementViewSet(ModelViewSet):
@@ -65,15 +71,53 @@ class ViewsAndClicksAPIView(APIView):
         ip_address = request.data.get('customer_ip')
 
         device_id = request.data.get('device_id')
-        
-        engagement = Engagement.objects.create(
-            product_id=product, 
-            influencer_id=influencer,
-            device_id=device_id,
-            customer_ip=ip_address
-        )
 
-        engagement.record_views_and_clicks()
+        #Check Fraudulent Activity
+        existing_engagement = Engagement.objects.filter(
+            device_id=device_id, 
+            customer_ip=ip_address
+        ).first()
+
+        current_campain = PromotionCampaign.objects.filter(
+            product_id=product,
+            influencer_id=influencer
+        ).first()
+
+        print(current_campain.id)
+
+        #if current_campain:
+        #    current_campain.clicks += 1
+        #    current_campain.views = current_campain.views + 1
+        #    current_campain.save()
+
+        
+        if existing_engagement:
+            engagement = Engagement.objects.create(
+                product_id=product, 
+                influencer_id=influencer,
+                device_id=device_id,
+                customer_ip=ip_address,
+                likes=0,
+                views=0,
+                comments=0,
+                clicks=0,
+                status="fradulent"
+            )
+        else:
+            engagement = Engagement.objects.create(
+                product_id=product, 
+                influencer_id=influencer,
+                device_id=device_id,
+                customer_ip=ip_address,
+                likes=0,
+                comments=0,
+                status="clean"
+            )
+            engagement.record_views_and_clicks()
+            if current_campain:
+                current_campain.record_engagement()
+
+        
     
 
         return Response({"data": {

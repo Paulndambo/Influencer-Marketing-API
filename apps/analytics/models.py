@@ -8,7 +8,7 @@ CHARACTERISTICS_CHOICES = (
 
 # Create your models here.
 class PromotionCampaign(AbstractBaseModel):
-    influencer = models.ForeignKey("users.Influencer", on_delete=models.CASCADE)
+    influencer = models.ForeignKey("users.Influencer", on_delete=models.CASCADE, related_name="campaigns")
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     campaign_url = models.URLField(null=True, max_length=500)
     likes = models.PositiveIntegerField(default=0)
@@ -19,6 +19,11 @@ class PromotionCampaign(AbstractBaseModel):
 
     def __str__(self):
         return f"{self.influencer.user.username} promoted {self.product.name}"
+
+    def record_engagement(self):
+        self.clicks += 1
+        self.views += 1
+        self.save()
 
 
 class Engagement(AbstractBaseModel):
