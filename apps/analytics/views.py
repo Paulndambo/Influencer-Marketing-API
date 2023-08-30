@@ -17,7 +17,7 @@ current_env = os.environ.get("CURRENT_ENVIRONMENT", "DEVELOPMENT")
 
 BACKEND_URL =  "http://127.0.0.1:8000/products" 
 if current_env == "PRODUCTION":
-    BACKEND_URL = "https://influencer-marketing-api.onrender.com/products/"
+    BACKEND_URL = "https://influencer-marketing-api.onrender.com/products"
 
 
 class PromotionCampaignViewSet(ModelViewSet):
