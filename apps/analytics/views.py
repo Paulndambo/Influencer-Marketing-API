@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -8,15 +9,33 @@ from apps.analytics.models import Engagement, PromotionCampaign
 from apps.analytics.serializers import EngagementSerializer, PromotionCampaignSerializer
 from apps.users.models import Influencer
 from apps.products.models import Product
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 from apps.analytics.engagement_methods.track_engagement import ViewsAndClicksProcessor
 # Create your views here.
-BACKEND_URL = "http://127.0.0.1:8000/products"
+current_env = os.environ.get("CURRENT_ENVIRONMENT", "DEVELOPMENT")
+
+BACKEND_URL =  "http://127.0.0.1:8000/products" 
+if current_env == "PRODUCTION":
+    BACKEND_URL = "https://influencer-marketing-api.onrender.com/products/"
 
 
 class PromotionCampaignViewSet(ModelViewSet):
     queryset = PromotionCampaign.objects.all()
     serializer_class = PromotionCampaignSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_authenticated:
+            if user.role == "customer":
+                return self.queryset.filter(product__customer__user=user)
+            elif user.role == "influencer":
+                return self.queryset.filter(influencer__user=user)
+
+        return self.queryset
+
 
     def create(self, request, *args, **kwargs):
         try:
@@ -27,6 +46,7 @@ class PromotionCampaignViewSet(ModelViewSet):
             influencer = Influencer.objects.get(user_id=user)
             campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer.id}"
 
+        
             campaign_object = {
                 "influencer_user_id": user,
                 "product_id": product,
@@ -39,11 +59,12 @@ class PromotionCampaignViewSet(ModelViewSet):
                 product_id=product,
                 campaign_url=campaign_url
             )
-
+            
             return Response({
                 "product": product,
                 "influencer": influencer.user.email,
-                "campaign_url": campaign_url
+                "campaign_url": campaign_url,
+                "environment": current_env
             }, status=status.HTTP_201_CREATED)
         except Exception as e:
             raise e
@@ -52,6 +73,17 @@ class PromotionCampaignViewSet(ModelViewSet):
 class EngagementViewSet(ModelViewSet):
     queryset = Engagement.objects.all()
     serializer_class = EngagementSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.role == "customer":
+            return self.queryset.filter(product__customer__user=user)
+        elif user.role == "influencer":
+            return self.queryset.filter(influencer__user=user)
+
+        return self.queryset
 
 
 class ViewsAndClicksAPIView(APIView):
@@ -75,7 +107,8 @@ class ViewsAndClicksAPIView(APIView):
         #Check Fraudulent Activity
         existing_engagement = Engagement.objects.filter(
             device_id=device_id, 
-            customer_ip=ip_address
+            customer_ip=ip_address,
+            product_id=product
         ).first()
 
         current_campain = PromotionCampaign.objects.filter(
@@ -84,12 +117,7 @@ class ViewsAndClicksAPIView(APIView):
         ).first()
 
         print(current_campain.id)
-
-        #if current_campain:
-        #    current_campain.clicks += 1
-        #    current_campain.views = current_campain.views + 1
-        #    current_campain.save()
-
+        
         
         if existing_engagement:
             engagement = Engagement.objects.create(
@@ -101,7 +129,7 @@ class ViewsAndClicksAPIView(APIView):
                 views=0,
                 comments=0,
                 clicks=0,
-                status="fradulent"
+                status="fraudulent"
             )
         else:
             engagement = Engagement.objects.create(
@@ -116,8 +144,6 @@ class ViewsAndClicksAPIView(APIView):
             engagement.record_views_and_clicks()
             if current_campain:
                 current_campain.record_engagement()
-
-        
     
 
         return Response({"data": {
