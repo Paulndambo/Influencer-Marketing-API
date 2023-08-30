@@ -6,6 +6,7 @@ import string
 ROLE_CHOICES = (
     ("customer", "Customer"),
     ("influencer", "Influencer"),
+    ("admin", "Admin")
 )
 
 def generate_unique_key(value, length=40):

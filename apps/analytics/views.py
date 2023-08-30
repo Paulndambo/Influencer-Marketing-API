@@ -12,6 +12,9 @@ from apps.products.models import Product
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 from apps.analytics.engagement_methods.track_engagement import ViewsAndClicksProcessor
+
+from apps.analytics.engagement_methods.create_engagements import create_engagement
+
 # Create your views here.
 current_env = os.environ.get("CURRENT_ENVIRONMENT", "DEVELOPMENT")
 
@@ -87,67 +90,40 @@ class EngagementViewSet(ModelViewSet):
 
 
 class ViewsAndClicksAPIView(APIView):
-
-    def get_client_ip(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-
-
     def post(self, request):
-        influencer = request.data.get('influencer')
-        product = request.data.get('product')
-        ip_address = request.data.get('customer_ip')
+        try:
+            influencer = request.data.get('influencer')
+            product = request.data.get('product')
+            ip_address = request.data.get('customer_ip')
 
-        device_id = request.data.get('device_id')
+            device_id = request.data.get('device_id')
 
-        #Check Fraudulent Activity
-        existing_engagement = Engagement.objects.filter(
-            device_id=device_id, 
-            customer_ip=ip_address,
-            product_id=product
-        ).first()
-
-        current_campain = PromotionCampaign.objects.filter(
-            product_id=product,
-            influencer_id=influencer
-        ).first()
-
-        print(current_campain.id)
-        
-        
-        if existing_engagement:
-            engagement = Engagement.objects.create(
-                product_id=product, 
-                influencer_id=influencer,
-                device_id=device_id,
+            #Check Fraudulent Activity
+            existing_engagement = Engagement.objects.filter(
+                device_id=device_id, 
                 customer_ip=ip_address,
-                likes=0,
-                views=0,
-                comments=0,
-                clicks=0,
-                status="fraudulent"
-            )
-        else:
-            engagement = Engagement.objects.create(
-                product_id=product, 
-                influencer_id=influencer,
-                device_id=device_id,
-                customer_ip=ip_address,
-                likes=0,
-                comments=0,
-                status="clean"
-            )
-            engagement.record_views_and_clicks()
-            if current_campain:
-                current_campain.record_engagement()
-    
+                product_id=product
+            ).first()
 
-        return Response({"data": {
-            "influencer": influencer,
-            "product": product,
-            "device_id": device_id,
-        }}, status=status.HTTP_201_CREATED)
+            current_campaign = PromotionCampaign.objects.filter(
+                product_id=product,
+                influencer_id=influencer
+            ).first()
+
+            create_engagement(
+                existing_engagement=existing_engagement,
+                current_campaign=current_campaign,
+                product=product,
+                influencer=influencer,
+                device_id=device_id,
+                ip_address=ip_address
+            )
+            
+
+            return Response({"data": {
+                "influencer": influencer,
+                "product": product,
+                "device_id": device_id,
+            }}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            raise e

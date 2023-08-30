@@ -13,9 +13,14 @@ class EngagementSerializer(serializers.ModelSerializer):
 
 class PromotionCampaignSerializer(serializers.ModelSerializer):
     product_name = serializers.SerializerMethodField()
+    influencer_name = serializers.SerializerMethodField()
     class Meta:
         model = PromotionCampaign
         fields = "__all__"
 
     def get_product_name(self, obj):
         return obj.product.name
+
+
+    def get_influencer_name(self, obj):
+        return obj.influencer.user.username
