@@ -1,7 +1,8 @@
-from InfluencerMarketer.celery import app
+from apps.payments.distribute_promotion_budget import \
+    calculate_and_distribute_payment
 from apps.products.models import Product
+from InfluencerMarketer.celery import app
 
-from apps.payments.distribute_promotion_budget import calculate_and_distribute_payment
 
 @app.task(name="distribute_promotion_revenue_task")
 def distribute_promotion_revenue_task():
