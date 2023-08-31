@@ -5,3 +5,4 @@ django-rest-framework-nested
 djangorestframework-simplejwt
 drf-nested-routers
 gunicorn
+whitenoise
