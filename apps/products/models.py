@@ -10,6 +10,7 @@ class Product(AbstractBaseModel):
     max_promotion_days = models.FloatField(default=1)
     customer = models.ForeignKey("users.Customer", on_delete=models.SET_NULL, null=True)
     campaign_limit_reached = models.BooleanField(default=False)
+    revenue_distributed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.customer.user.username}"

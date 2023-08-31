@@ -112,14 +112,9 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    logo = serializers.SerializerMethodField()
-
     class Meta:
         model = Customer
         fields = "__all__"
-
-    def get_logo(self, obj):
-        return f"http://127.0.0.1:8000{obj.customer_logo.url}"
 
 
 class SocialProfileSerializer(serializers.ModelSerializer):
