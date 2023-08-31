@@ -4,15 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0003_alter_customer_phone_number_and_more'),
+        ("users", "0003_alter_customer_phone_number_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='role',
-            field=models.CharField(choices=[('customer', 'Customer'), ('influencer', 'Influencer'), ('admin', 'Admin')], max_length=32),
+            model_name="user",
+            name="role",
+            field=models.CharField(
+                choices=[
+                    ("customer", "Customer"),
+                    ("influencer", "Influencer"),
+                    ("admin", "Admin"),
+                ],
+                max_length=32,
+            ),
         ),
     ]

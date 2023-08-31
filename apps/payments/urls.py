@@ -5,7 +5,9 @@ from apps.payments.views import WalletViewSet, PaymentRecordViewSet
 
 router = DefaultRouter()
 router.register("wallets", WalletViewSet, basename="wallets")
-router.register("influencer-payments", PaymentRecordViewSet, basename="influencer-payments")
+router.register(
+    "influencer-payments", PaymentRecordViewSet, basename="influencer-payments"
+)
 
 urlpatterns = [
     path("", include(router.urls)),

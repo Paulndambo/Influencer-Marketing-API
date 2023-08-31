@@ -6,44 +6,71 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Influencer',
+            name="Influencer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('phone_number', models.CharField(max_length=255)),
-                ('address', models.CharField(max_length=255, null=True)),
-                ('instagram', models.CharField(max_length=255, null=True)),
-                ('tiktok', models.CharField(max_length=255, null=True)),
-                ('facebook', models.CharField(max_length=255, null=True)),
-                ('twitter', models.CharField(max_length=255, null=True)),
-                ('threads', models.CharField(max_length=255, null=True)),
-                ('youtube', models.CharField(max_length=255, null=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                ("phone_number", models.CharField(max_length=255)),
+                ("address", models.CharField(max_length=255, null=True)),
+                ("instagram", models.CharField(max_length=255, null=True)),
+                ("tiktok", models.CharField(max_length=255, null=True)),
+                ("facebook", models.CharField(max_length=255, null=True)),
+                ("twitter", models.CharField(max_length=255, null=True)),
+                ("threads", models.CharField(max_length=255, null=True)),
+                ("youtube", models.CharField(max_length=255, null=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Customer',
+            name="Customer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('phone_number', models.CharField(max_length=255)),
-                ('address', models.CharField(max_length=255, null=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                ("phone_number", models.CharField(max_length=255)),
+                ("address", models.CharField(max_length=255, null=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

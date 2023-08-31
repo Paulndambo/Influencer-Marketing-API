@@ -1,6 +1,11 @@
 from apps.users.models import (
-    User, Customer, Influencer, InfluencerProfilePhoto, 
-    InfluencerProfileVideo, InfluencerWorkExperience, SocialProfile
+    User,
+    Customer,
+    Influencer,
+    InfluencerProfilePhoto,
+    InfluencerProfileVideo,
+    InfluencerWorkExperience,
+    SocialProfile,
 )
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
@@ -14,31 +19,28 @@ from django.utils import timezone
 import datetime
 
 
-
 class AuthTokenCustomSerializer(AuthTokenSerializer):
-
     def validate(self, attrs):
-        username = attrs.get('username')
-        password = attrs.get('password')
+        username = attrs.get("username")
+        password = attrs.get("password")
 
         if username and password:
             user = authenticate(username=username, password=password)
 
             if user:
                 if not user.is_active:
-                    msg = _('User account is disabled.')
-                    raise serializers.ValidationError(msg, code='authorization')
+                    msg = _("User account is disabled.")
+                    raise serializers.ValidationError(msg, code="authorization")
             else:
-                msg = _('Unable to log in with provided credentials.')
-                raise AuthenticationFailed(msg, code='authorization')
+                msg = _("Unable to log in with provided credentials.")
+                raise AuthenticationFailed(msg, code="authorization")
         else:
             msg = _('Must include "username" and "password".')
-            raise serializers.ValidationError(msg, code='authorization')
+            raise serializers.ValidationError(msg, code="authorization")
 
-        attrs['user'] = user
+        attrs["user"] = user
         return attrs
 
-        
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -61,7 +63,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data["password"])
         user.save()
         return user
-
 
 
 class ForgotPasswordSerializer(serializers.Serializer):
@@ -112,6 +113,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class CustomerSerializer(serializers.ModelSerializer):
     logo = serializers.SerializerMethodField()
+
     class Meta:
         model = Customer
         fields = "__all__"

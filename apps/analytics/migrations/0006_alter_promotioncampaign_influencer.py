@@ -5,16 +5,19 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0003_alter_customer_phone_number_and_more'),
-        ('analytics', '0005_promotioncampaign_campaign_url'),
+        ("users", "0003_alter_customer_phone_number_and_more"),
+        ("analytics", "0005_promotioncampaign_campaign_url"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='promotioncampaign',
-            name='influencer',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='campaigns', to='users.influencer'),
+            model_name="promotioncampaign",
+            name="influencer",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="campaigns",
+                to="users.influencer",
+            ),
         ),
     ]

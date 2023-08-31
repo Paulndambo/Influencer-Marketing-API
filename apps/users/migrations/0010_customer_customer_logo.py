@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0009_influencer_second_photo_influencer_third_photo'),
+        ("users", "0009_influencer_second_photo_influencer_third_photo"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customer',
-            name='customer_logo',
-            field=models.FileField(null=True, upload_to='customers_logo'),
+            model_name="customer",
+            name="customer_logo",
+            field=models.FileField(null=True, upload_to="customers_logo"),
         ),
     ]

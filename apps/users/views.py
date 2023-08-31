@@ -16,13 +16,24 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 
 from apps.users.models import (
-    User, Customer, Influencer, InfluencerProfilePhoto, 
-    InfluencerProfileVideo, InfluencerWorkExperience, SocialProfile
+    User,
+    Customer,
+    Influencer,
+    InfluencerProfilePhoto,
+    InfluencerProfileVideo,
+    InfluencerWorkExperience,
+    SocialProfile,
 )
 from apps.users.serializers import (
-    UserSerializer, RegisterSerializer, AuthTokenCustomSerializer,
-    CustomerSerializer, InfluencerSerializer, InfluencerProfileVideoSerializer,
-    InfluencerProfilePhotoSerializer, InfluencerWorkExperienceSerializer, SocialProfileSerializer
+    UserSerializer,
+    RegisterSerializer,
+    AuthTokenCustomSerializer,
+    CustomerSerializer,
+    InfluencerSerializer,
+    InfluencerProfileVideoSerializer,
+    InfluencerProfilePhotoSerializer,
+    InfluencerWorkExperienceSerializer,
+    SocialProfileSerializer,
 )
 
 
@@ -33,6 +44,7 @@ class GetAuthToken(ObtainAuthToken):
     POST:
         serializer: AuthTokenSerializer
     """
+
     serializer_class = AuthTokenCustomSerializer
     permission_classes = [AllowAny]
 
@@ -40,10 +52,9 @@ class GetAuthToken(ObtainAuthToken):
         return self.serializer_class()
 
     def post(self, request, *args, **kwargs):
-
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        user = serializer.validated_data["user"]
         token = Token.objects.get(user=user).key
 
         # Update last_login of the current user
@@ -52,9 +63,9 @@ class GetAuthToken(ObtainAuthToken):
 
         response = {
             "id": user.id,
-            'token': token,
-            'pk': user.pk,
-            'role': user.role,
+            "token": token,
+            "pk": user.pk,
+            "role": user.role,
             "username": user.username,
             "email": user.email,
             "name": f"{user.first_name} {user.last_name}"
@@ -101,7 +112,6 @@ class InfluencerViewSet(ModelViewSet):
     serializer_class = InfluencerSerializer
     permission_classes = [IsAuthenticated]
 
-
     def get_request(self):
         user = self.request.user
 
@@ -119,12 +129,9 @@ class InfluencerSocialProfileViewSet(ModelViewSet):
     serializer_class = SocialProfileSerializer
     permission_classes = [IsAuthenticated]
 
-
-
     def get_serializer_context(self):
-        return {"influencer_pk": self.kwargs.get("influencer_pk")}    
+        return {"influencer_pk": self.kwargs.get("influencer_pk")}
 
-    
     def get_queryset(self):
         influencer_pk = self.kwargs.get("influencer_pk")
 
@@ -138,10 +145,8 @@ class InfluencerWorkExperienceViewSet(ModelViewSet):
     serializer_class = InfluencerWorkExperienceSerializer
     permission_classes = [IsAuthenticated]
 
-
     def get_serializer_context(self):
-        return {"influencer_pk": self.kwargs.get("influencer_pk")}    
-
+        return {"influencer_pk": self.kwargs.get("influencer_pk")}
 
     def get_queryset(self):
         influencer_pk = self.kwargs.get("influencer_pk")
@@ -157,9 +162,8 @@ class InfluencerProfileVideoViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_serializer_context(self):
-        return {"influencer_pk": self.kwargs.get("influencer_pk")}    
+        return {"influencer_pk": self.kwargs.get("influencer_pk")}
 
-    
     def get_queryset(self):
         influencer_pk = self.kwargs.get("influencer_pk")
 
@@ -173,11 +177,9 @@ class InfluencerProfilePhotoViewSet(ModelViewSet):
     serializer_class = InfluencerProfilePhotoSerializer
     permission_classes = [IsAuthenticated]
 
-
     def get_serializer_context(self):
-        return {"influencer_pk": self.kwargs.get("influencer_pk")}    
+        return {"influencer_pk": self.kwargs.get("influencer_pk")}
 
-    
     def get_queryset(self):
         influencer_pk = self.kwargs.get("influencer_pk")
 
