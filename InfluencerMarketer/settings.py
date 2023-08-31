@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.products',
     'apps.payments',
     'apps.analytics',
+    'apps.notifications',
 ]
 
 MIDDLEWARE = [
@@ -78,12 +79,24 @@ WSGI_APPLICATION = 'InfluencerMarketer.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.environ.get("POSTGRES_DB", "influencer_marketing"),
+        "USER": os.environ.get("POSTGRES_USER", "paulndambo"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "ePKXDMecSaceNBSK1xHTXjQIrgpe1AVX"),
+        "HOST": os.environ.get("DB_HOST", "dpg-cjo5vc358phs738p1d4g-a.frankfurt-postgres.render.com"),
+        "PORT": 5432,
     }
 }
+
 
 
 # Password validation
