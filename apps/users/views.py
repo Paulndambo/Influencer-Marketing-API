@@ -15,8 +15,15 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 
-from apps.users.models import User
-from apps.users.serializers import UserSerializer, RegisterSerializer, AuthTokenCustomSerializer
+from apps.users.models import (
+    User, Customer, Influencer, InfluencerProfilePhoto, 
+    InfluencerProfileVideo, InfluencerWorkExperience, SocialProfile
+)
+from apps.users.serializers import (
+    UserSerializer, RegisterSerializer, AuthTokenCustomSerializer,
+    CustomerSerializer, InfluencerSerializer, InfluencerProfileVideoSerializer,
+    InfluencerProfilePhotoSerializer, InfluencerWorkExperienceSerializer, SocialProfileSerializer
+)
 
 
 # Create your views here.
@@ -71,3 +78,84 @@ class RegisterAPI(generics.GenericAPIView):
 class UserModelViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class CustomerViewSet(ModelViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+
+class InfluencerViewSet(ModelViewSet):
+    queryset = Influencer.objects.all()
+    serializer_class = InfluencerSerializer
+
+
+    def get_serializer_context(self):
+        return {"request": self.request}
+
+
+class InfluencerSocialProfileViewSet(ModelViewSet):
+    queryset = SocialProfile.objects.all()
+    serializer_class = SocialProfileSerializer
+
+
+    def get_serializer_context(self):
+        return {"influencer_pk": self.kwargs.get("influencer_pk")}    
+
+    
+    def get_queryset(self):
+        influencer_pk = self.kwargs.get("influencer_pk")
+
+        if influencer_pk:
+            return self.queryset.filter(influencer_id=influencer_pk)
+        return self.queryset
+
+
+class InfluencerWorkExperienceViewSet(ModelViewSet):
+    queryset = InfluencerWorkExperience.objects.all()
+    serializer_class = InfluencerWorkExperienceSerializer
+
+
+    def get_serializer_context(self):
+        return {"influencer_pk": self.kwargs.get("influencer_pk")}    
+
+
+    def get_queryset(self):
+        influencer_pk = self.kwargs.get("influencer_pk")
+
+        if influencer_pk:
+            return self.queryset.filter(influencer_id=influencer_pk)
+        return self.queryset
+
+
+class InfluencerProfileVideoViewSet(ModelViewSet):
+    queryset = InfluencerProfileVideo.objects.all()
+    serializer_class = InfluencerProfileVideoSerializer
+
+    def get_serializer_context(self):
+        return {"influencer_pk": self.kwargs.get("influencer_pk")}    
+
+    
+    def get_queryset(self):
+        influencer_pk = self.kwargs.get("influencer_pk")
+
+        if influencer_pk:
+            return self.queryset.filter(influencer_id=influencer_pk)
+        return self.queryset
+
+
+class InfluencerProfilePhotoViewSet(ModelViewSet):
+    queryset = InfluencerProfilePhoto.objects.all()
+    serializer_class = InfluencerProfilePhotoSerializer
+
+
+    def get_serializer_context(self):
+        return {"influencer_pk": self.kwargs.get("influencer_pk")}    
+
+    
+    def get_queryset(self):
+        influencer_pk = self.kwargs.get("influencer_pk")
+
+        if influencer_pk:
+            return self.queryset.filter(influencer_id=influencer_pk)
+        return self.queryset

@@ -1,4 +1,7 @@
-from apps.users.models import User
+from apps.users.models import (
+    User, Customer, Influencer, InfluencerProfilePhoto, 
+    InfluencerProfileVideo, InfluencerWorkExperience, SocialProfile
+)
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
@@ -104,4 +107,44 @@ class ChangePasswordSerializer(serializers.Serializer):
             self.user = User.objects.get(token=self.context["token"])
         except User.DoesNotExist:
             raise serializers.ValidationError("Token is not valid.")
+        fields = "__all__"
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    logo = serializers.SerializerMethodField()
+    class Meta:
+        model = Customer
+        fields = "__all__"
+
+    def get_logo(self, obj):
+        return f"http://127.0.0.1:8000{obj.customer_logo.url}"
+
+
+class SocialProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialProfile
+        fields = "__all__"
+
+
+class InfluencerWorkExperienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InfluencerWorkExperience
+        fields = "__all__"
+
+
+class InfluencerProfilePhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InfluencerProfilePhoto
+        fields = "__all__"
+
+
+class InfluencerProfileVideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InfluencerProfileVideo
+        fields = "__all__"
+
+
+class InfluencerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Influencer
         fields = "__all__"

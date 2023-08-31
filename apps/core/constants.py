@@ -9,6 +9,17 @@ ROLE_CHOICES = (
     ("admin", "Admin")
 )
 
+WORK_ENVIRONMENT_CHOICES = (
+    ("remote", "Remote"),
+    ("onsite", "Onsite"),
+    ("hybrid", "Hybrid"),
+)
+
+JOB_TYPE_CHOICES = (
+    ("part-time", "Part Time"),
+    ("full-time", "Full Time")
+)
+
 def generate_unique_key(value, length=40):
     """
     generate key from passed value
