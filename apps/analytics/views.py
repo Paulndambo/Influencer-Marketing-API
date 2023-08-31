@@ -31,6 +31,7 @@ class PromotionCampaignViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
 
+        
         if user.is_authenticated:
             if user.role == "customer":
                 return self.queryset.filter(product__customer__user=user)

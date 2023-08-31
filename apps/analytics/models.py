@@ -12,13 +12,14 @@ class PromotionCampaign(AbstractBaseModel):
     influencer = models.ForeignKey(
         "users.Influencer", on_delete=models.CASCADE, related_name="campaigns"
     )
-    product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
+    product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name="productcampaigns")
     campaign_url = models.URLField(null=True, max_length=500)
     likes = models.PositiveIntegerField(default=0)
     shares = models.PositiveIntegerField(default=0)
     comments = models.PositiveIntegerField(default=0)
     clicks = models.PositiveIntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
+    influencer_paid = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.influencer.user.username} promoted {self.product.name}"

@@ -18,4 +18,4 @@ class EngagementAdmin(admin.ModelAdmin):
 
 @admin.register(PromotionCampaign)
 class PromotionCampaignAdmin(admin.ModelAdmin):
-    list_display = ["product", "influencer", "campaign_url", "likes", "views"]
+    list_display = ["product", "influencer", "campaign_url", "likes", "views", "influencer_paid"]
