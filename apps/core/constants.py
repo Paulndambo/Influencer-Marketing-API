@@ -6,7 +6,7 @@ import string
 ROLE_CHOICES = (
     ("customer", "Customer"),
     ("influencer", "Influencer"),
-    ("admin", "Admin")
+    ("admin", "Admin"),
 )
 
 WORK_ENVIRONMENT_CHOICES = (
@@ -15,10 +15,8 @@ WORK_ENVIRONMENT_CHOICES = (
     ("hybrid", "Hybrid"),
 )
 
-JOB_TYPE_CHOICES = (
-    ("part-time", "Part Time"),
-    ("full-time", "Full Time")
-)
+JOB_TYPE_CHOICES = (("part-time", "Part Time"), ("full-time", "Full Time"))
+
 
 def generate_unique_key(value, length=40):
     """

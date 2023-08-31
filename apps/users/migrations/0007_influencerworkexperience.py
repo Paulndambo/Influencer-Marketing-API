@@ -5,29 +5,61 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0006_influencer_profile_photo_influencerprofilevideo_and_more'),
+        ("users", "0006_influencer_profile_photo_influencerprofilevideo_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='InfluencerWorkExperience',
+            name="InfluencerWorkExperience",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('title', models.CharField(max_length=500)),
-                ('employer', models.CharField(max_length=255)),
-                ('job_type', models.CharField(choices=[('part-time', 'Part Time'), ('full-time', 'Full Time')], max_length=255)),
-                ('work_environment', models.CharField(choices=[('remote', 'Remote'), ('onsite', 'Onsite'), ('hybrid', 'Hybrid')], max_length=255)),
-                ('start_date', models.DateField()),
-                ('end_date', models.DateField(null=True)),
-                ('description', models.TextField(null=True)),
-                ('influencer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.influencer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                ("title", models.CharField(max_length=500)),
+                ("employer", models.CharField(max_length=255)),
+                (
+                    "job_type",
+                    models.CharField(
+                        choices=[
+                            ("part-time", "Part Time"),
+                            ("full-time", "Full Time"),
+                        ],
+                        max_length=255,
+                    ),
+                ),
+                (
+                    "work_environment",
+                    models.CharField(
+                        choices=[
+                            ("remote", "Remote"),
+                            ("onsite", "Onsite"),
+                            ("hybrid", "Hybrid"),
+                        ],
+                        max_length=255,
+                    ),
+                ),
+                ("start_date", models.DateField()),
+                ("end_date", models.DateField(null=True)),
+                ("description", models.TextField(null=True)),
+                (
+                    "influencer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="users.influencer",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

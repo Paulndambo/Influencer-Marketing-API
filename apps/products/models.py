@@ -1,5 +1,7 @@
 from django.db import models
 from apps.core.models import AbstractBaseModel
+
+
 # Create your models here.
 class Product(AbstractBaseModel):
     name = models.CharField(max_length=255)

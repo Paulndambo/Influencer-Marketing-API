@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0002_influencer_customer'),
+        ("users", "0002_influencer_customer"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='customer',
-            name='phone_number',
+            model_name="customer",
+            name="phone_number",
             field=models.CharField(max_length=255, null=True),
         ),
         migrations.AlterField(
-            model_name='influencer',
-            name='phone_number',
+            model_name="influencer",
+            name="phone_number",
             field=models.CharField(max_length=255, null=True),
         ),
     ]

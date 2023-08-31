@@ -5,41 +5,68 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0005_rename_facebook_influencer_city_and_more'),
+        ("users", "0005_rename_facebook_influencer_city_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='influencer',
-            name='profile_photo',
-            field=models.ImageField(null=True, upload_to='influencer_profile_photos'),
+            model_name="influencer",
+            name="profile_photo",
+            field=models.ImageField(null=True, upload_to="influencer_profile_photos"),
         ),
         migrations.CreateModel(
-            name='InfluencerProfileVideo',
+            name="InfluencerProfileVideo",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('video', models.URLField(max_length=1000, null=True)),
-                ('influencer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.influencer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                ("video", models.URLField(max_length=1000, null=True)),
+                (
+                    "influencer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="users.influencer",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='InfluencerProfilePhoto',
+            name="InfluencerProfilePhoto",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('photo', models.ImageField(null=True, upload_to='influencer_photos')),
-                ('influencer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.influencer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("modified", models.DateTimeField(auto_now=True)),
+                ("photo", models.ImageField(null=True, upload_to="influencer_photos")),
+                (
+                    "influencer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="users.influencer",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

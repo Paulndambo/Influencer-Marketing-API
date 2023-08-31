@@ -12,4 +12,3 @@ class PaymentRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentRecord
         fields = "__all__"
-

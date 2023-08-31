@@ -10,9 +10,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import AbstractUser
 import uuid
 
-from apps.core.constants import (
-    ROLE_CHOICES, JOB_TYPE_CHOICES, WORK_ENVIRONMENT_CHOICES
-)
+from apps.core.constants import ROLE_CHOICES, JOB_TYPE_CHOICES, WORK_ENVIRONMENT_CHOICES
+
 
 # Create your models here.
 class User(AbstractUser, AbstractBaseModel):
@@ -22,7 +21,6 @@ class User(AbstractUser, AbstractBaseModel):
     )
     role = models.CharField(choices=ROLE_CHOICES, max_length=32)
 
-
     def __str__(self):
         return f"{self.username} {self.role}"
 
@@ -31,11 +29,10 @@ class Customer(AbstractBaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=255, null=True)
     address = models.CharField(max_length=255, null=True)
-    
 
     def __str__(self):
         return self.user.username
-        
+
 
 class Influencer(AbstractBaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -44,17 +41,19 @@ class Influencer(AbstractBaseModel):
     city = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
     profile_photo = models.ImageField(upload_to="profile_photos/", null=True)
-    
 
     def __str__(self):
         return self.user.username
+
 
 class InfluencerWorkExperience(AbstractBaseModel):
     influencer = models.ForeignKey(Influencer, on_delete=models.CASCADE)
     title = models.CharField(max_length=500)
     employer = models.CharField(max_length=255)
     job_type = models.CharField(max_length=255, choices=JOB_TYPE_CHOICES)
-    work_environment = models.CharField(max_length=255, choices=WORK_ENVIRONMENT_CHOICES)
+    work_environment = models.CharField(
+        max_length=255, choices=WORK_ENVIRONMENT_CHOICES
+    )
     start_date = models.DateField()
     end_date = models.DateField(null=True)
     description = models.TextField(null=True)
@@ -93,4 +92,3 @@ class SocialProfile(AbstractBaseModel):
 
     def __str__(self):
         return self.influencer.user.username
-

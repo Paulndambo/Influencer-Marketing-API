@@ -6,9 +6,12 @@ CHARACTERISTICS_CHOICES = (
     ("fraudulent", "Fraudulent"),
 )
 
+
 # Create your models here.
 class PromotionCampaign(AbstractBaseModel):
-    influencer = models.ForeignKey("users.Influencer", on_delete=models.CASCADE, related_name="campaigns")
+    influencer = models.ForeignKey(
+        "users.Influencer", on_delete=models.CASCADE, related_name="campaigns"
+    )
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     campaign_url = models.URLField(null=True, max_length=500)
     likes = models.PositiveIntegerField(default=0)
@@ -34,10 +37,11 @@ class Engagement(AbstractBaseModel):
     comments = models.PositiveIntegerField(default=0)
     clicks = models.PositiveIntegerField(default=0)
     views = models.PositiveIntegerField(default=0)
-    status = models.CharField(max_length=255, choices=CHARACTERISTICS_CHOICES, null=True)
+    status = models.CharField(
+        max_length=255, choices=CHARACTERISTICS_CHOICES, null=True
+    )
     customer_ip = models.CharField(max_length=255, null=True)
     device_id = models.CharField(max_length=255, null=True)
-    
 
     def __str__(self):
         return f"{self.influencer.user.username} promoted {self.product.name}"
