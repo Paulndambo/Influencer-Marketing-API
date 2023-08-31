@@ -9,5 +9,6 @@ class ProductAdmin(admin.ModelAdmin):
         "name",
         "price",
         "customer",
-        "revenue_distributed"
+        "revenue_distributed",
+        "promotion_ends_on"
     ]

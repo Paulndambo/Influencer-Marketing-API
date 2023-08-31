@@ -1,7 +1,8 @@
 from django.db import models
 from apps.core.models import AbstractBaseModel
+from django.utils import timezone
 
-
+current_time = timezone.now()
 # Create your models here.
 class Product(AbstractBaseModel):
     name = models.CharField(max_length=255)
@@ -11,6 +12,12 @@ class Product(AbstractBaseModel):
     customer = models.ForeignKey("users.Customer", on_delete=models.SET_NULL, null=True)
     campaign_limit_reached = models.BooleanField(default=False)
     revenue_distributed = models.BooleanField(default=False)
+    promotion_ends_on = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} - {self.customer.user.username}"
+
+    def save(self) -> None:
+        promotion_end_date = current_time + timezone.timedelta(days=self.max_promotion_days)
+        self.promotion_ends_on = promotion_end_date
+        return super().save()
