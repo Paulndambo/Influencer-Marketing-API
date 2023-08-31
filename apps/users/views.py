@@ -79,16 +79,36 @@ class UserModelViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    permission_classes = [IsAdminUser]
+
 
 class CustomerViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_request(self):
+        user = self.request.user
+
+        if user.is_superuser:
+            return self.queryset
+        else:
+            return self.queryset.filter(user=user)
 
 
 class InfluencerViewSet(ModelViewSet):
     queryset = Influencer.objects.all()
     serializer_class = InfluencerSerializer
+    permission_classes = [IsAuthenticated]
 
+
+    def get_request(self):
+        user = self.request.user
+
+        if user.is_superuser:
+            return self.queryset
+        else:
+            return self.queryset.filter(user=user)
 
     def get_serializer_context(self):
         return {"request": self.request}
@@ -97,6 +117,8 @@ class InfluencerViewSet(ModelViewSet):
 class InfluencerSocialProfileViewSet(ModelViewSet):
     queryset = SocialProfile.objects.all()
     serializer_class = SocialProfileSerializer
+    permission_classes = [IsAuthenticated]
+
 
 
     def get_serializer_context(self):
@@ -114,6 +136,7 @@ class InfluencerSocialProfileViewSet(ModelViewSet):
 class InfluencerWorkExperienceViewSet(ModelViewSet):
     queryset = InfluencerWorkExperience.objects.all()
     serializer_class = InfluencerWorkExperienceSerializer
+    permission_classes = [IsAuthenticated]
 
 
     def get_serializer_context(self):
@@ -131,6 +154,7 @@ class InfluencerWorkExperienceViewSet(ModelViewSet):
 class InfluencerProfileVideoViewSet(ModelViewSet):
     queryset = InfluencerProfileVideo.objects.all()
     serializer_class = InfluencerProfileVideoSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_context(self):
         return {"influencer_pk": self.kwargs.get("influencer_pk")}    
@@ -147,6 +171,7 @@ class InfluencerProfileVideoViewSet(ModelViewSet):
 class InfluencerProfilePhotoViewSet(ModelViewSet):
     queryset = InfluencerProfilePhoto.objects.all()
     serializer_class = InfluencerProfilePhotoSerializer
+    permission_classes = [IsAuthenticated]
 
 
     def get_serializer_context(self):
