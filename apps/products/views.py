@@ -1,15 +1,31 @@
-from django.shortcuts import render
+
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.viewsets import ModelViewSet
 
 from apps.products.models import Product
-from apps.users.models import Influencer
 from apps.products.serializers import ProductSerializer
-
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from apps.users.models import Influencer
 
 
 # Create your views here.
 class ProductViewSet(ModelViewSet):
+    """
+    Description:
+    - This view is reponsible for;-
+        - fetching products and returning to the user.
+        - creating, edit, and deleting products.
+
+    Parameters:
+    - None
+
+    Returns:
+    - json_data: Response data based on the current user
+        - if not logged in, the user will see all posted products.
+        - if user is customer, they will see all the products they have posted.
+        - if user is influencer, they will see all products which they have not promoted yet.
+        - if user is admin, will see all the products.
+
+    """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -25,7 +41,4 @@ class ProductViewSet(ModelViewSet):
                     influencer.campaigns.values_list("product", flat=True)
                 )
                 return self.queryset.exclude(id__in=influencer_promos)
-                print(influencer_promos)
-            # for key, value in ref:
-            # print(f"Key: {key}, Value: {value}")
         return self.queryset

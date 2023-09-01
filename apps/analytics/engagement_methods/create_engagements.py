@@ -9,6 +9,7 @@ def create_engagement(
     device_id: str,
     ip_address: str,
 ):
+    # Catch fraudulent engagement
     if existing_engagement:
         engagement = Engagement.objects.create(
             product_id=product,

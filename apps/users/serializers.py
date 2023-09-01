@@ -1,22 +1,16 @@
-from apps.users.models import (
-    User,
-    Customer,
-    Influencer,
-    InfluencerProfilePhoto,
-    InfluencerProfileVideo,
-    InfluencerWorkExperience,
-    SocialProfile,
-)
-from rest_framework import serializers
-from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import authenticate
+import datetime
 
+from django.contrib.auth import authenticate
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from rest_framework import serializers
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.exceptions import AuthenticationFailed
 
 from apps.core.constants import generate_unique_key
-from django.utils import timezone
-import datetime
+from apps.users.models import (Customer, Influencer, InfluencerProfilePhoto,
+                               InfluencerProfileVideo,
+                               InfluencerWorkExperience, SocialProfile, User)
 
 
 class AuthTokenCustomSerializer(AuthTokenSerializer):
@@ -30,7 +24,8 @@ class AuthTokenCustomSerializer(AuthTokenSerializer):
             if user:
                 if not user.is_active:
                     msg = _("User account is disabled.")
-                    raise serializers.ValidationError(msg, code="authorization")
+                    raise serializers.ValidationError(
+                        msg, code="authorization")
             else:
                 msg = _("Unable to log in with provided credentials.")
                 raise AuthenticationFailed(msg, code="authorization")
@@ -78,7 +73,8 @@ class ForgotPasswordSerializer(serializers.Serializer):
         try:
             self.user = User.objects.get(email=value)
         except User.DoesNotExist:
-            raise serializers.ValidationError("No user found with provided email!")
+            raise serializers.ValidationError(
+                "No user found with provided email!")
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -96,12 +92,6 @@ class ChangePasswordSerializer(serializers.Serializer):
         self.user.is_active = True
         self.user.save()
 
-    # def validate(self, data):
-
-    #    self.check_valid_token()
-    #    check_valid_password(data, user=self.user)
-
-    #    return data
 
     def check_valid_token(self):
         try:

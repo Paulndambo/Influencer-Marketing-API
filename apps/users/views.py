@@ -1,40 +1,23 @@
-from django.shortcuts import render
-from rest_framework import status, generics, permissions
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
-
-## Rest Framework Imports
-from django.shortcuts import render
-from django.http import JsonResponse
+# Rest Framework Imports
 from django.utils import timezone
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import generics, status
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
-from apps.users.models import (
-    User,
-    Customer,
-    Influencer,
-    InfluencerProfilePhoto,
-    InfluencerProfileVideo,
-    InfluencerWorkExperience,
-    SocialProfile,
-)
-from apps.users.serializers import (
-    UserSerializer,
-    RegisterSerializer,
-    AuthTokenCustomSerializer,
-    CustomerSerializer,
-    InfluencerSerializer,
-    InfluencerProfileVideoSerializer,
-    InfluencerProfilePhotoSerializer,
-    InfluencerWorkExperienceSerializer,
-    SocialProfileSerializer,
-)
+from apps.users.models import (Customer, Influencer, InfluencerProfilePhoto,
+                               InfluencerProfileVideo,
+                               InfluencerWorkExperience, SocialProfile, User)
+from apps.users.serializers import (AuthTokenCustomSerializer,
+                                    CustomerSerializer,
+                                    InfluencerProfilePhotoSerializer,
+                                    InfluencerProfileVideoSerializer,
+                                    InfluencerSerializer,
+                                    InfluencerWorkExperienceSerializer,
+                                    RegisterSerializer,
+                                    SocialProfileSerializer, UserSerializer)
 
 
 # Create your views here.
@@ -69,7 +52,6 @@ class GetAuthToken(ObtainAuthToken):
             "username": user.username,
             "email": user.email,
             "name": f"{user.first_name} {user.last_name}"
-            #'view_id': user.get_view_id,
         }
 
         return Response(response)
@@ -106,6 +88,10 @@ class CustomerViewSet(ModelViewSet):
         else:
             return self.queryset.filter(user=user)
 
+
+"""
+
+"""
 
 class InfluencerViewSet(ModelViewSet):
     queryset = Influencer.objects.all()

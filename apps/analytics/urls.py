@@ -1,11 +1,8 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from apps.analytics.views import (
-    EngagementViewSet,
-    ViewsAndClicksAPIView,
-    PromotionCampaignViewSet,
-)
+from apps.analytics.views import (EngagementViewSet, PromotionCampaignViewSet,
+                                  ViewsAndClicksAPIView)
 
 router = DefaultRouter()
 router.register("engagements", EngagementViewSet, basename="engagements")
