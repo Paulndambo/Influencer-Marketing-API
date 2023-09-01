@@ -7,3 +7,6 @@ drf-nested-routers
 gunicorn
 whitenoise
 pillow
+pika
+drf_yasg
+psycopg2-binary

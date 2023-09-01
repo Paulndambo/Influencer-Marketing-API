@@ -1,4 +1,5 @@
 from django.db import models
+
 from apps.core.models import AbstractBaseModel
 
 CHARACTERISTICS_CHOICES = (
@@ -48,6 +49,15 @@ class Engagement(AbstractBaseModel):
         return f"{self.influencer.user.username} promoted {self.product.name}"
 
     def record_views_and_clicks(self):
+        """
+        When called, the method updates clicks & views on the specific engagement
+
+        Parameters:
+        - self: The current engagement object
+
+        Returns:
+        - None
+        """
         self.clicks += 1
         self.views += 1
         self.save()
