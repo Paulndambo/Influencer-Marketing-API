@@ -23,7 +23,7 @@ from apps.users.models import Influencer
 # Create your views here.
 current_env = os.environ.get("CURRENT_ENVIRONMENT", "DEVELOPMENT")
 
-BACKEND_URL = "http://127.0.0.1:8000/products"
+BACKEND_URL = "http://127.0.0.1:3000/products"
 if current_env == "PRODUCTION":
     BACKEND_URL = "https://influencer-marketing-api.onrender.com/products"
 
@@ -65,6 +65,7 @@ class PromotionCampaignViewSet(ModelViewSet):
 
         return self.queryset
 
+
     def create(self, request, *args, **kwargs):
         try:
             data = request.data
@@ -83,21 +84,6 @@ class PromotionCampaignViewSet(ModelViewSet):
             youtube_url = f"{BACKEND_URL}/{product}/?platform=youtube&ref={influencer.id}"
             linkedin_url = f"{BACKEND_URL}/{product}/?platform=linkedin&ref={influencer.id}"
 
-
-            campaign_object = {
-                "influencer_user_id": user,
-                "product_id": product,
-                "campaign_url": campaign_url,
-                "tiktok_url": tiktok_url,
-                "twitter_url": twitter_url,
-                "threads_url": threads_url,
-                "instagram_url": instagram_url,
-                "snapchat_url": snapchat_url,
-                "youtube_url": youtube_url,
-                "facebook_url": facebook_url,
-                "linkedin_url": linkedin_url
-            }
-            print(campaign_object)
 
             PromotionCampaign.objects.create(
                 influencer=influencer, 
@@ -194,19 +180,24 @@ class ViewsAndClicksAPIView(APIView):
             location = get_customer_location_details(reqUrl)
             country = location.get("country_name")
             city = location.get("city")
+
             
+        
             # Check Fraudulent Activity
             # Same IP, Device ID and Product on multiple records will be flagged as fraud
             
-            existing_engagement = Engagement.objects.filter(
-                device_id=device_id, customer_ip=ip_address, product_id=product
-            ).first()
+            #existing_engagement = Engagement.objects.filter(
+            #    device_id=device_id, customer_ip=ip_address, product_id=product
+            #).first()
 
             ## This gets the specific campaign posted by the influencer on the product
-            current_campaign = PromotionCampaign.objects.filter(
-                product_id=product, influencer_id=influencer
-            ).first()
+            #current_campaign = PromotionCampaign.objects.filter(
+            #    product_id=product, influencer_id=influencer
+            #).first()
+            params = request.query_params
+            print(f"Query Params: {params}")
 
+            """
             create_engagement(
                 existing_engagement=existing_engagement,
                 current_campaign=current_campaign,
@@ -217,6 +208,7 @@ class ViewsAndClicksAPIView(APIView):
                 country=country,
                 city=city
             )
+            """
             
             return Response(
                 {
