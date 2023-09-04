@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from apps.analytics.models import (Engagement, EngagementComment,
                                    PromotionCampaign)
+from apps.core.location_processor import get_customer_location_details
 from apps.users.models import Influencer
 
 
@@ -34,17 +35,36 @@ class PromotionCampaignSerializer(serializers.ModelSerializer):
 class EngagementCommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = EngagementComment
-        fields = ["text"]
+        fields = ["text", "customer_ip", "device_id"]
 
 
     def create(self, validated_data):
         try:
             campaign_pk = self.context.get("campaign_pk")
+            
             text = validated_data.get("text")
+            customter_ip = validated_data.get("customer_ip")
+            device_id = validated_data.get("device_id")
+
+            reqUrl = f"https://ipapi.co/{customter_ip}/json/"
+            
+            location = get_customer_location_details(reqUrl)
+            country = location.get("country_name")
+            city = location.get("city")
+
+
             campaign = PromotionCampaign.objects.get(id=campaign_pk)
+
             campaign.comments += 1
             campaign.save()
-            return EngagementComment.objects.create(campaign_id=campaign_pk, text=text)
+            return EngagementComment.objects.create(
+                campaign_id=campaign_pk, 
+                text=text,
+                customer_ip=customter_ip,
+                device_id=device_id,
+                country=country,
+                city=city
+            )
         except Exception as e:
             raise e
        

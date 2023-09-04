@@ -22,7 +22,7 @@ class EngagementAdmin(admin.ModelAdmin):
 
 @admin.register(EngagementComment)
 class EngagementCommentAdmin(admin.ModelAdmin):
-    list_display = ["uuid", "campaign", "text"]
+    list_display = ["uuid", "campaign", "text", "customer_ip", "device_id", "city", "country"]
 
 @admin.register(PromotionCampaign)
 class PromotionCampaignAdmin(admin.ModelAdmin):

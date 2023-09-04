@@ -51,6 +51,7 @@ class Engagement(AbstractBaseModel):
     device_id = models.CharField(max_length=255, null=True)
     city = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
+    source = models.CharField(max_length=255, null=True)
     
 
     def __str__(self):
