@@ -74,15 +74,43 @@ class PromotionCampaignViewSet(ModelViewSet):
             influencer = Influencer.objects.get(user_id=user)
             campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer.id}"
 
+            tiktok_url = f"{BACKEND_URL}/{product}/?platform=titkok&ref={influencer.id}"
+            twitter_url = f"{BACKEND_URL}/{product}/?platform=twitter&ref={influencer.id}"
+            instagram_url = f"{BACKEND_URL}/{product}/?platform=instagram&ref={influencer.id}"
+            facebook_url = f"{BACKEND_URL}/{product}/?platform=facebook&ref={influencer.id}"
+            threads_url = f"{BACKEND_URL}/{product}/?platform=threads&ref={influencer.id}"
+            snapchat_url = f"{BACKEND_URL}/{product}/?platform=snapchat&ref={influencer.id}"
+            youtube_url = f"{BACKEND_URL}/{product}/?platform=youtube&ref={influencer.id}"
+            linkedin_url = f"{BACKEND_URL}/{product}/?platform=linkedin&ref={influencer.id}"
+
+
             campaign_object = {
                 "influencer_user_id": user,
                 "product_id": product,
                 "campaign_url": campaign_url,
+                "tiktok_url": tiktok_url,
+                "twitter_url": twitter_url,
+                "threads_url": threads_url,
+                "instagram_url": instagram_url,
+                "snapchat_url": snapchat_url,
+                "youtube_url": youtube_url,
+                "facebook_url": facebook_url,
+                "linkedin_url": linkedin_url
             }
             print(campaign_object)
 
             PromotionCampaign.objects.create(
-                influencer=influencer, product_id=product, campaign_url=campaign_url
+                influencer=influencer, 
+                product_id=product, 
+                campaign_url=campaign_url,
+                tiktok_url = tiktok_url,
+                twitter_url = twitter_url,
+                threads_url = threads_url,
+                instagram_url = instagram_url,
+                snapchat_url = snapchat_url,
+                youtube_url = youtube_url,
+                facebook_url = facebook_url,
+                linkedin_url = linkedin_url
             )
 
             return Response(
@@ -91,6 +119,14 @@ class PromotionCampaignViewSet(ModelViewSet):
                     "influencer": influencer.user.email,
                     "campaign_url": campaign_url,
                     "environment": current_env,
+                    "tiktok_url": tiktok_url,
+                    "twitter_url": twitter_url,
+                    "threads_url": threads_url,
+                    "instagram_url": instagram_url,
+                    "snapchat_url": snapchat_url,
+                    "youtube_url": youtube_url,
+                    "facebook_url": facebook_url,
+                    "linkedin_url": linkedin_url
                 },
                 status=status.HTTP_201_CREATED,
             )
