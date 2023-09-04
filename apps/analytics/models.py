@@ -26,6 +26,7 @@ class PromotionCampaign(AbstractBaseModel):
     snapchat_url = models.URLField(null=True, max_length=255)
     youtube_url = models.URLField(null=True, max_length=255)
     linkedin_url = models.URLField(null=True, max_length=255)
+    email_url = models.URLField(null=True, max_length=255)
     
     likes = models.PositiveIntegerField(default=0)
     shares = models.PositiveIntegerField(default=0)

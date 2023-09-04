@@ -18,6 +18,7 @@ from apps.analytics.serializers import (EngagementCommentCreateSerializer,
                                         InfluencerAnalyticsSerializer,
                                         PromotionCampaignSerializer)
 from apps.core.location_processor import get_customer_location_details
+from apps.core.utm_constructor import utm_constructor
 from apps.users.models import Influencer
 
 # Create your views here.
@@ -75,15 +76,7 @@ class PromotionCampaignViewSet(ModelViewSet):
             influencer = Influencer.objects.get(user_id=user)
             campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer.id}"
 
-            tiktok_url = f"{BACKEND_URL}/{product}/?platform=titkok&ref={influencer.id}"
-            twitter_url = f"{BACKEND_URL}/{product}/?platform=twitter&ref={influencer.id}"
-            instagram_url = f"{BACKEND_URL}/{product}/?platform=instagram&ref={influencer.id}"
-            facebook_url = f"{BACKEND_URL}/{product}/?platform=facebook&ref={influencer.id}"
-            threads_url = f"{BACKEND_URL}/{product}/?platform=threads&ref={influencer.id}"
-            snapchat_url = f"{BACKEND_URL}/{product}/?platform=snapchat&ref={influencer.id}"
-            youtube_url = f"{BACKEND_URL}/{product}/?platform=youtube&ref={influencer.id}"
-            linkedin_url = f"{BACKEND_URL}/{product}/?platform=linkedin&ref={influencer.id}"
-
+            tiktok_url, facebook_url, twitter_url, instagram_url, youtube_url, threads_url, email_url, snapchat_url, linkedin_url = utm_constructor(BACKEND_URL, product)
 
             PromotionCampaign.objects.create(
                 influencer=influencer, 
@@ -96,7 +89,8 @@ class PromotionCampaignViewSet(ModelViewSet):
                 snapchat_url = snapchat_url,
                 youtube_url = youtube_url,
                 facebook_url = facebook_url,
-                linkedin_url = linkedin_url
+                linkedin_url = linkedin_url,
+                email_url = email_url
             )
 
             return Response(
@@ -112,7 +106,8 @@ class PromotionCampaignViewSet(ModelViewSet):
                     "snapchat_url": snapchat_url,
                     "youtube_url": youtube_url,
                     "facebook_url": facebook_url,
-                    "linkedin_url": linkedin_url
+                    "linkedin_url": linkedin_url,
+                    "email_url": email_url
                 },
                 status=status.HTTP_201_CREATED,
             )
