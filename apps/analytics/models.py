@@ -17,6 +17,16 @@ class PromotionCampaign(AbstractBaseModel):
     )
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name="productcampaigns")
     campaign_url = models.URLField(null=True, max_length=500)
+
+    tiktok_url = models.URLField(null=True, max_length=255)
+    twitter_url = models.URLField(null=True, max_length=255)
+    instagram_url = models.URLField(null=True, max_length=255)
+    facebook_url = models.URLField(null=True, max_length=255)
+    threads_url = models.URLField(null=True, max_length=255)
+    snapchat_url = models.URLField(null=True, max_length=255)
+    youtube_url = models.URLField(null=True, max_length=255)
+    linkedin_url = models.URLField(null=True, max_length=255)
+    
     likes = models.PositiveIntegerField(default=0)
     shares = models.PositiveIntegerField(default=0)
     comments = models.PositiveIntegerField(default=0)
