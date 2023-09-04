@@ -19,6 +19,7 @@ from apps.analytics.serializers import (EngagementCommentCreateSerializer,
                                         PromotionCampaignSerializer)
 from apps.core.location_processor import get_customer_location_details
 from apps.core.utm_constructor import utm_constructor
+from apps.products.models import Product
 from apps.users.models import Influencer
 
 # Create your views here.
@@ -38,7 +39,7 @@ class PromotionCampaignViewSet(ModelViewSet):
     1. POST
         - product: The product being promoted on the campaign.
         - user: The current user, who is the influencer promoting the product.
-    
+
     Returns:
     - json_data: A response based on current user;-
         - if influencer, returns only campaigns posted by them.
@@ -50,10 +51,8 @@ class PromotionCampaignViewSet(ModelViewSet):
     serializer_class = PromotionCampaignSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-
     def get_serializer_context(self):
         return {"request": self.request}
-
 
     def get_queryset(self):
         user = self.request.user
@@ -66,38 +65,41 @@ class PromotionCampaignViewSet(ModelViewSet):
 
         return self.queryset
 
-
     def create(self, request, *args, **kwargs):
         try:
             data = request.data
-            product = data.get("product")
+            product_id = data.get("product")
             user = data.get("user")
 
             influencer = Influencer.objects.get(user_id=user)
-            campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer.id}"
+            product = Product.objects.get(id=product_id)
+            #campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer.id}"
 
-            tiktok_url, facebook_url, twitter_url, instagram_url, youtube_url, threads_url, email_url, snapchat_url, linkedin_url = utm_constructor(BACKEND_URL, product)
+            product_url = f"{BACKEND_URL}/{product.id}/"
+
+            tiktok_url, facebook_url, twitter_url, instagram_url, youtube_url, threads_url, email_url, snapchat_url, linkedin_url = utm_constructor(
+                product_url, product.id, influencer.id)
 
             PromotionCampaign.objects.create(
-                influencer=influencer, 
-                product_id=product, 
-                campaign_url=campaign_url,
-                tiktok_url = tiktok_url,
-                twitter_url = twitter_url,
-                threads_url = threads_url,
-                instagram_url = instagram_url,
-                snapchat_url = snapchat_url,
-                youtube_url = youtube_url,
-                facebook_url = facebook_url,
-                linkedin_url = linkedin_url,
-                email_url = email_url
+                influencer=influencer,
+                product=product,
+                campaign_url=product_url,
+                tiktok_url=tiktok_url,
+                twitter_url=twitter_url,
+                threads_url=threads_url,
+                instagram_url=instagram_url,
+                snapchat_url=snapchat_url,
+                youtube_url=youtube_url,
+                facebook_url=facebook_url,
+                linkedin_url=linkedin_url,
+                email_url=email_url
             )
 
             return Response(
                 {
-                    "product": product,
+                    "product": product.id,
                     "influencer": influencer.user.email,
-                    "campaign_url": campaign_url,
+                    "campaign_url": product_url,
                     "environment": current_env,
                     "tiktok_url": tiktok_url,
                     "twitter_url": twitter_url,
@@ -135,7 +137,6 @@ class EngagementViewSet(ModelViewSet):
     serializer_class = EngagementSerializer
     permission_classes = [IsAuthenticated]
 
-
     def get_queryset(self):
         user = self.request.user
 
@@ -169,26 +170,24 @@ class ViewsAndClicksAPIView(APIView):
             product = request.data.get("product")
             ip_address = request.data.get("customer_ip")
             device_id = request.data.get("device_id")
-            
+
             reqUrl = f"https://ipapi.co/{ip_address}/json/"
-            
+
             location = get_customer_location_details(reqUrl)
             country = location.get("country_name")
             city = location.get("city")
 
-            
-        
             # Check Fraudulent Activity
             # Same IP, Device ID and Product on multiple records will be flagged as fraud
-            
-            #existing_engagement = Engagement.objects.filter(
-            #    device_id=device_id, customer_ip=ip_address, product_id=product
-            #).first()
 
-            ## This gets the specific campaign posted by the influencer on the product
-            #current_campaign = PromotionCampaign.objects.filter(
+            # existing_engagement = Engagement.objects.filter(
+            #    device_id=device_id, customer_ip=ip_address, product_id=product
+            # ).first()
+
+            # This gets the specific campaign posted by the influencer on the product
+            # current_campaign = PromotionCampaign.objects.filter(
             #    product_id=product, influencer_id=influencer
-            #).first()
+            # ).first()
             params = request.query_params
             print(f"Query Params: {params}")
 
@@ -204,7 +203,7 @@ class ViewsAndClicksAPIView(APIView):
                 city=city
             )
             """
-            
+
             return Response(
                 {
                     "data": {

@@ -1,12 +1,13 @@
-def utm_constructor(url, campaign):
+def utm_constructor(url, product, influencer):
     medium = "social"
     content = "olitt_promo"
     term = "new_stock"
-    
+    campaign = f"{product}-{influencer}"
+
     tiktok = f"{url}?utm_source=tiktok&utm_medium={medium}&utm_campaign={campaign}&utm_content={content}&utm_term={term}"
     facebook = f"{url}?utm_source=facebook&utm_medium={medium}&utm_campaign={campaign}&utm_content={content}&utm_term={term}"
     twitter = f"{url}?utm_source=twitter&utm_medium={medium}&utm_campaign={campaign}&utm_content={content}&utm_term={term}"
-    instagram = f"{url}?utm_source=instgram&utm_medium={medium}&utm_campaign={campaign}&utm_content={content}&utm_term={term}"
+    instagram = f"{url}?utm_source=instagram&utm_medium={medium}&utm_campaign={campaign}&utm_content={content}&utm_term={term}"
     youtube = f"{url}?utm_source=youtube&utm_medium={medium}&utm_campaign={campaign}&utm_content={content}&utm_term={term}"
     threads = f"{url}?utm_source=threads&utm_medium={medium}&utm_campaign={campaign}&utm_content={content}&utm_term={term}"
     email = f"{url}?utm_source=email&utm_medium={medium}&utm_campaign={campaign}&utm_content={content}&utm_term={term}"

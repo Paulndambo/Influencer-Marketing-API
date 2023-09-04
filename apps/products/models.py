@@ -1,11 +1,13 @@
 from django.db import models
-from apps.core.models import AbstractBaseModel
 from django.utils import timezone
+
+from apps.core.models import AbstractBaseModel
 
 current_time = timezone.now()
 # Create your models here.
 class Product(AbstractBaseModel):
     name = models.CharField(max_length=255)
+    product_url = models.URLField(null=True, max_length=500)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     promotion_budget = models.DecimalField(max_digits=10, decimal_places=2)
     max_promotion_days = models.FloatField(default=1)
