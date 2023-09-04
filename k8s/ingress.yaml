@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: influencer-marketing-ingress
+  labels:
+    name: influencer-marketing-ingress
+spec:
+  rules:
+  - host: "https://influencer-marketing-api.onrender.com/"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: backend-deployment
+            port: 
+              number: 8000

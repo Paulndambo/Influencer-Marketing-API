@@ -89,10 +89,6 @@ class CustomerViewSet(ModelViewSet):
             return self.queryset.filter(user=user)
 
 
-"""
-
-"""
-
 class InfluencerViewSet(ModelViewSet):
     queryset = Influencer.objects.all()
     serializer_class = InfluencerSerializer

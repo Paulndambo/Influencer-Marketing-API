@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from apps.core.models import AbstractBaseModel
@@ -33,7 +35,7 @@ class PromotionCampaign(AbstractBaseModel):
 
 class Engagement(AbstractBaseModel):
     influencer = models.ForeignKey("users.Influencer", on_delete=models.CASCADE)
-    product = models.ForeignKey("products.Product", on_delete=models.CASCADE)
+    product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name="productengagements")
     likes = models.PositiveIntegerField(default=0)
     shares = models.PositiveIntegerField(default=0)
     comments = models.PositiveIntegerField(default=0)
@@ -61,3 +63,12 @@ class Engagement(AbstractBaseModel):
         self.clicks += 1
         self.views += 1
         self.save()
+
+
+class EngagementComment(AbstractBaseModel):
+    uuid = models.UUIDField(default=uuid.uuid4())
+    campaign = models.ForeignKey(PromotionCampaign, on_delete=models.CASCADE)
+    text = models.TextField(null=True)
+
+    def __str__(self):
+        return str(uuid)
