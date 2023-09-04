@@ -9,8 +9,11 @@ from rest_framework.viewsets import ModelViewSet
 
 from apps.analytics.engagement_methods.create_engagements import \
     create_engagement
-from apps.analytics.models import Engagement, PromotionCampaign
-from apps.analytics.serializers import (EngagementSerializer,
+from apps.analytics.models import (Engagement, EngagementComment,
+                                   PromotionCampaign)
+from apps.analytics.serializers import (EngagementCommentCreateSerializer,
+                                        EngagementCommentSerializer,
+                                        EngagementSerializer,
                                         PromotionCampaignSerializer)
 from apps.users.models import Influencer
 
@@ -42,6 +45,11 @@ class PromotionCampaignViewSet(ModelViewSet):
     queryset = PromotionCampaign.objects.all()
     serializer_class = PromotionCampaignSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+
+    def get_serializer_context(self):
+        return {"request": self.request}
+
 
     def get_queryset(self):
         user = self.request.user
@@ -174,3 +182,16 @@ class ViewsAndClicksAPIView(APIView):
             )
         except Exception as e:
             raise e
+
+
+class EngagementCommentViewSet(ModelViewSet):
+    queryset = EngagementComment.objects.all()
+    serializer_class = EngagementCommentSerializer
+
+    def get_serializer_context(self):
+        return {"campaign_pk": self.kwargs.get("campaign_pk")}
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return EngagementCommentCreateSerializer
+        return EngagementCommentSerializer
