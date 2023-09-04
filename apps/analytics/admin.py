@@ -15,6 +15,8 @@ class EngagementAdmin(admin.ModelAdmin):
         "status",
         "customer_ip",
         "device_id",
+        "city",
+        "country"
     ]
 
 

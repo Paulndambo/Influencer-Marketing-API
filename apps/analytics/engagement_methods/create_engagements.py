@@ -8,6 +8,8 @@ def create_engagement(
     influencer: int,
     device_id: str,
     ip_address: str,
+    country: str,
+    city: str
 ):
     # Catch fraudulent engagement
     if existing_engagement:
@@ -21,6 +23,8 @@ def create_engagement(
             comments=0,
             clicks=0,
             status="fraudulent",
+            country=country,
+            city=city
         )
     else:
         engagement = Engagement.objects.create(
@@ -31,6 +35,8 @@ def create_engagement(
             likes=0,
             comments=0,
             status="clean",
+            country=country,
+            city=city
         )
         engagement.record_views_and_clicks()
         if current_campaign:

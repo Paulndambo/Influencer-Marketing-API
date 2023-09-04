@@ -3,6 +3,7 @@ from django.urls import include, path
 from rest_framework_nested import routers
 
 from apps.analytics.views import (EngagementCommentViewSet, EngagementViewSet,
+                                  InfluencerAnalyticsAPIView,
                                   PromotionCampaignViewSet,
                                   ViewsAndClicksAPIView)
 
@@ -18,6 +19,7 @@ campaigns_router.register("campaign-comments", EngagementCommentViewSet, basenam
 urlpatterns = [
     path("", include(router.urls)),
     path("views-and-clicks/", ViewsAndClicksAPIView.as_view(), name="views-and-clicks"),
+    path("influencer-analytics/", InfluencerAnalyticsAPIView.as_view(), name="influencer-analytics"),
     path("", include(campaigns_router.urls)),
     # path("promote-product/", PromotionCampaignAPIView.as_view(), name="promote-product"),
 ]

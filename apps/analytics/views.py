@@ -1,6 +1,7 @@
 import os
 
-from rest_framework import status
+import requests
+from rest_framework import generics, status
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -14,7 +15,9 @@ from apps.analytics.models import (Engagement, EngagementComment,
 from apps.analytics.serializers import (EngagementCommentCreateSerializer,
                                         EngagementCommentSerializer,
                                         EngagementSerializer,
+                                        InfluencerAnalyticsSerializer,
                                         PromotionCampaignSerializer)
+from apps.core.location_processor import get_customer_location_details
 from apps.users.models import Influencer
 
 # Create your views here.
@@ -150,8 +153,15 @@ class ViewsAndClicksAPIView(APIView):
             ip_address = request.data.get("customer_ip")
             device_id = request.data.get("device_id")
             
+            reqUrl = f"https://ipapi.co/{ip_address}/json/"
+            
+            location = get_customer_location_details(reqUrl)
+            country = location.get("country_name")
+            city = location.get("city")
+            
             # Check Fraudulent Activity
             # Same IP, Device ID and Product on multiple records will be flagged as fraud
+            
             existing_engagement = Engagement.objects.filter(
                 device_id=device_id, customer_ip=ip_address, product_id=product
             ).first()
@@ -168,14 +178,20 @@ class ViewsAndClicksAPIView(APIView):
                 influencer=influencer,
                 device_id=device_id,
                 ip_address=ip_address,
+                country=country,
+                city=city
             )
-
+            
             return Response(
                 {
                     "data": {
                         "influencer": influencer,
                         "product": product,
                         "device_id": device_id,
+                        "location": {
+                            "country": country,
+                            "city": city
+                        }
                     }
                 },
                 status=status.HTTP_201_CREATED,
@@ -195,3 +211,8 @@ class EngagementCommentViewSet(ModelViewSet):
         if self.request.method == "POST":
             return EngagementCommentCreateSerializer
         return EngagementCommentSerializer
+
+
+class InfluencerAnalyticsAPIView(generics.ListAPIView):
+    queryset = Influencer.objects.all()
+    serializer_class = InfluencerAnalyticsSerializer

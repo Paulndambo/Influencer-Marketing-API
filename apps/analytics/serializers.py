@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from apps.analytics.models import (Engagement, EngagementComment,
                                    PromotionCampaign)
+from apps.users.models import Influencer
 
 
 class EngagementSerializer(serializers.ModelSerializer):
@@ -52,3 +53,34 @@ class EngagementCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = EngagementComment
         fields = "__all__"
+
+
+class InfluencerAnalyticsSerializer(serializers.ModelSerializer):
+    comments_collected = serializers.SerializerMethodField()
+    likes_collected = serializers.SerializerMethodField()
+    total_likes = serializers.SerializerMethodField()
+    total_views_collected = serializers.SerializerMethodField()
+    total_products_promoted = serializers.SerializerMethodField()
+    promotions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Influencer
+        fields = "__all__"
+
+    def get_promotions(self, obj):
+        return obj.campaigns.values()
+
+    def get_comments_collected(self, obj):
+        return 0
+    
+    def get_likes_collected(self, obj):
+        return 0
+
+    def get_total_likes(self, obj):
+        return 0
+
+    def get_total_views_collected(self, obj):
+        return 0
+
+    def get_total_products_promoted(self, obj):
+        return 0

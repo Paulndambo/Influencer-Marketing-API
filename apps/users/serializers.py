@@ -1,12 +1,14 @@
 import datetime
 
 from django.contrib.auth import authenticate
+from django.db.models import Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.exceptions import AuthenticationFailed
 
+from apps.analytics.models import Engagement
 from apps.core.constants import generate_unique_key
 from apps.users.models import (Customer, Influencer, InfluencerProfilePhoto,
                                InfluencerProfileVideo,
@@ -132,6 +134,63 @@ class InfluencerProfileVideoSerializer(serializers.ModelSerializer):
 
 
 class InfluencerSerializer(serializers.ModelSerializer):
+    comments_collected = serializers.SerializerMethodField()
+    likes_collected = serializers.SerializerMethodField()
+    total_likes = serializers.SerializerMethodField()
+    total_views_collected = serializers.SerializerMethodField()
+    total_clicks_collected = serializers.SerializerMethodField()
+    total_products_promoted = serializers.SerializerMethodField()
+    promotions = serializers.SerializerMethodField()
+    geographic_analysis = serializers.SerializerMethodField()
+    clicks_and_views_by_country = serializers.SerializerMethodField()
+    clicks_and_views_by_city = serializers.SerializerMethodField()
+
     class Meta:
         model = Influencer
         fields = "__all__"
+
+    def get_promotions(self, obj):
+        return obj.campaigns.values()
+
+    def get_geographic_analysis(self, obj):
+        queryset = obj.engagements.values('country', 'city').annotate(
+            views_count=Sum('views'),
+            clicks_count=Sum('clicks')
+        ).order_by('country', 'city')
+
+        return queryset
+
+    def get_clicks_and_views_by_country(self, obj):
+        queryset = obj.engagements.values('country').annotate(
+            views_count=Sum('views'),
+            clicks_count=Sum('clicks')
+        ).order_by('country')
+
+        return queryset
+
+    def get_clicks_and_views_by_city(self, obj):
+        queryset = obj.engagements.values('city').annotate(
+            views_count=Sum('views'),
+            clicks_count=Sum('clicks')
+        ).order_by('city')
+
+        return queryset
+
+
+    def get_comments_collected(self, obj):
+        return 0
+    
+    def get_likes_collected(self, obj):
+        return obj.engagements.filter(likes=1).count()
+
+    def get_total_likes(self, obj):
+        return 0
+
+    def get_total_views_collected(self, obj):
+        return obj.engagements.filter(views=1).count()
+
+    def get_total_clicks_collected(self, obj):
+        return obj.engagements.filter(clicks=1).count()
+
+    def get_total_products_promoted(self, obj):
+        return obj.campaigns.count()

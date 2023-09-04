@@ -28,13 +28,16 @@ class PromotionCampaign(AbstractBaseModel):
         return f"{self.influencer.user.username} promoted {self.product.name}"
 
     def record_engagement(self):
-        self.clicks += 1
-        self.views += 1
-        self.save()
+        try:
+            self.clicks += 1
+            self.views += 1
+            self.save()
+        except Exception as e:
+            raise e
 
 
 class Engagement(AbstractBaseModel):
-    influencer = models.ForeignKey("users.Influencer", on_delete=models.CASCADE)
+    influencer = models.ForeignKey("users.Influencer", on_delete=models.CASCADE, related_name="engagements")
     product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name="productengagements")
     likes = models.PositiveIntegerField(default=0)
     shares = models.PositiveIntegerField(default=0)
@@ -46,6 +49,9 @@ class Engagement(AbstractBaseModel):
     )
     customer_ip = models.CharField(max_length=255, null=True)
     device_id = models.CharField(max_length=255, null=True)
+    city = models.CharField(max_length=255, null=True)
+    country = models.CharField(max_length=255, null=True)
+    
 
     def __str__(self):
         return f"{self.influencer.user.username} promoted {self.product.name}"
@@ -69,6 +75,10 @@ class EngagementComment(AbstractBaseModel):
     uuid = models.UUIDField(default=uuid.uuid4())
     campaign = models.ForeignKey(PromotionCampaign, on_delete=models.CASCADE)
     text = models.TextField(null=True)
+    customer_ip = models.CharField(max_length=255, null=True)
+    device_id = models.CharField(max_length=255, null=True)
+    city = models.CharField(max_length=255, null=True)
+    country = models.CharField(max_length=255, null=True)
 
     def __str__(self):
         return str(uuid)
