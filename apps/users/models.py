@@ -94,7 +94,7 @@ class SocialProfile(AbstractBaseModel):
 
 
 class InfluencerPreference(AbstractBaseModel):
-    influencer = models.OneToOneField(Influencer, on_delete=models.CASCADE)
+    influencer = models.ForeignKey(Influencer, on_delete=models.CASCADE, related_name="influencerpreferences")
     preferred_platforms = models.JSONField(default=list)
     min_targetted_age = models.FloatField(default=1)
     max_targetted_age = models.FloatField(default=250)

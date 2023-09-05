@@ -75,7 +75,7 @@ class PromotionCampaignViewSet(ModelViewSet):
             product = Product.objects.get(id=product_id)
             #campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer.id}"
 
-            product_url = f"{BACKEND_URL}/{product.id}/"
+            product_url = f"{product.product_url}/{product.id}/"
 
             tiktok_url, facebook_url, twitter_url, instagram_url, youtube_url, threads_url, email_url, snapchat_url, linkedin_url = utm_constructor(
                 product_url, product.id, influencer.id)
