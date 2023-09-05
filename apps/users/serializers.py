@@ -8,7 +8,6 @@ from rest_framework import serializers
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.exceptions import AuthenticationFailed
 
-from apps.analytics.models import Engagement
 from apps.core.constants import generate_unique_key
 from apps.users.models import (Customer, Influencer, InfluencerProfilePhoto,
                                InfluencerProfileVideo,
@@ -78,7 +77,6 @@ class ForgotPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 "No user found with provided email!")
 
-
 class ChangePasswordSerializer(serializers.Serializer):
     user = None
 
@@ -104,6 +102,11 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
+    #user = serializers.HyperlinkedRelatedField(
+    #    view_name='users-detail',
+    #    lookup_field='pk',
+    #    read_only=True
+    #)
     class Meta:
         model = Customer
         fields = "__all__"

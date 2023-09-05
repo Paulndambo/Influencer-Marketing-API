@@ -166,10 +166,17 @@ class ViewsAndClicksAPIView(APIView):
 
     def post(self, request):
         try:
-            influencer = request.data.get("influencer")
-            product = request.data.get("product")
+            #influencer = request.data.get("influencer")
+            #product = request.data.get("product")
+            campaign = str(request.data.get("utm_campaign"))
             ip_address = request.data.get("customer_ip")
             device_id = request.data.get("device_id")
+            source = request.data.get("utm_source")
+
+            campaign_items = campaign.split("-")
+            product = int(campaign_items[0])
+            influencer = int(campaign_items[1])
+
 
             reqUrl = f"https://ipapi.co/{ip_address}/json/"
 
@@ -200,7 +207,8 @@ class ViewsAndClicksAPIView(APIView):
                 device_id=device_id,
                 ip_address=ip_address,
                 country=country,
-                city=city
+                city=city,
+                source=source
             )
             """
 
@@ -213,7 +221,8 @@ class ViewsAndClicksAPIView(APIView):
                         "location": {
                             "country": country,
                             "city": city
-                        }
+                        },
+                        "source": source
                     }
                 },
                 status=status.HTTP_201_CREATED,
