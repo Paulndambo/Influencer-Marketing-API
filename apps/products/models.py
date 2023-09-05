@@ -23,3 +23,15 @@ class Product(AbstractBaseModel):
         promotion_end_date = current_time + timezone.timedelta(days=self.max_promotion_days)
         self.promotion_ends_on = promotion_end_date
         return super().save()
+
+
+class ProductCampaignPreference(AbstractBaseModel):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name="productpreferences")
+    min_targetted_age = models.FloatField(default=1)
+    max_targetted_age = models.FloatField(default=250)
+    target_platforms = models.JSONField(default=list)
+    min_followers_on_target_platform = models.IntegerField(default=100)
+    min_engagement_percentage = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.product.name

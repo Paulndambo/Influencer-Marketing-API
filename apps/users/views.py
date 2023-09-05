@@ -7,11 +7,12 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from apps.users.models import (Customer, Influencer, InfluencerProfilePhoto,
-                               InfluencerProfileVideo,
+from apps.users.models import (Customer, Influencer, InfluencerPreference,
+                               InfluencerProfilePhoto, InfluencerProfileVideo,
                                InfluencerWorkExperience, SocialProfile, User)
 from apps.users.serializers import (AuthTokenCustomSerializer,
                                     CustomerSerializer,
+                                    InfluencerPreferenceSerializer,
                                     InfluencerProfilePhotoSerializer,
                                     InfluencerProfileVideoSerializer,
                                     InfluencerSerializer,
@@ -158,6 +159,21 @@ class InfluencerProfilePhotoViewSet(ModelViewSet):
     queryset = InfluencerProfilePhoto.objects.all()
     serializer_class = InfluencerProfilePhotoSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_context(self):
+        return {"influencer_pk": self.kwargs.get("influencer_pk")}
+
+    def get_queryset(self):
+        influencer_pk = self.kwargs.get("influencer_pk")
+
+        if influencer_pk:
+            return self.queryset.filter(influencer_id=influencer_pk)
+        return self.queryset
+
+
+class InfluencerPreferenceViewSet(ModelViewSet):
+    queryset = InfluencerPreference.objects.all()
+    serializer_class = InfluencerPreferenceSerializer
 
     def get_serializer_context(self):
         return {"influencer_pk": self.kwargs.get("influencer_pk")}

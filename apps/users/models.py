@@ -91,3 +91,14 @@ class SocialProfile(AbstractBaseModel):
 
     def __str__(self):
         return self.influencer.user.username
+
+
+class InfluencerPreference(AbstractBaseModel):
+    influencer = models.OneToOneField(Influencer, on_delete=models.CASCADE)
+    preferred_platforms = models.JSONField(default=list)
+    min_targetted_age = models.FloatField(default=1)
+    max_targetted_age = models.FloatField(default=250)
+    preferred_brand_types = models.JSONField(default=list)
+
+    def __str__(self):
+        return self.influencer.user.email

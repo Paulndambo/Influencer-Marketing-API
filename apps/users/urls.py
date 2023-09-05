@@ -22,12 +22,14 @@ To use them, the requests will look like;-
     - for work experiences: BASE_URL/influencers/{influencer_pk}/work-experiences/
     - for profile photos: BASE_URL/influencers/{influencer_pk}/profile-photos/
     - for profile videos: BASE_URL/influencers/{influencer_pk}/profile-videos/
+    - for preferences: BASE_URL/influencers/{influencer_pk}/preferences/
 """
 
 influencers_router.register("social-profiles", views.InfluencerSocialProfileViewSet, basename="social-profiles")
 influencers_router.register("work-experiences", views.InfluencerWorkExperienceViewSet, basename="work-experiences")
 influencers_router.register("profile-photos", views.InfluencerProfilePhotoViewSet, basename="profile-photos")
 influencers_router.register("profile-videos", views.InfluencerProfileVideoViewSet, basename="profile-videos")
+influencers_router.register("preferences", views.InfluencerPreferenceViewSet, basename="preferences")
 
 
 urlpatterns = [

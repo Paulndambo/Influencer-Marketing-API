@@ -9,8 +9,8 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.exceptions import AuthenticationFailed
 
 from apps.core.constants import generate_unique_key
-from apps.users.models import (Customer, Influencer, InfluencerProfilePhoto,
-                               InfluencerProfileVideo,
+from apps.users.models import (Customer, Influencer, InfluencerPreference,
+                               InfluencerProfilePhoto, InfluencerProfileVideo,
                                InfluencerWorkExperience, SocialProfile, User)
 
 
@@ -197,3 +197,9 @@ class InfluencerSerializer(serializers.ModelSerializer):
 
     def get_total_products_promoted(self, obj):
         return obj.campaigns.count()
+
+
+class InfluencerPreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InfluencerPreference
+        fields = "__all__"
