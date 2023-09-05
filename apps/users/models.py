@@ -1,16 +1,11 @@
-from django.db import models
-from apps.core.models import AbstractBaseModel
-from django.conf import settings
 
-from django.db.models.signals import post_save, pre_save
-from django.dispatch import receiver
-
-from django.utils.translation import gettext_lazy as _
-from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import AbstractUser
-import uuid
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 
-from apps.core.constants import ROLE_CHOICES, JOB_TYPE_CHOICES, WORK_ENVIRONMENT_CHOICES
+from apps.core.constants import (JOB_TYPE_CHOICES, ROLE_CHOICES,
+                                 WORK_ENVIRONMENT_CHOICES)
+from apps.core.models import AbstractBaseModel
 
 
 # Create your models here.
@@ -23,6 +18,10 @@ class User(AbstractUser, AbstractBaseModel):
 
     def __str__(self):
         return f"{self.username} {self.role}"
+
+    
+    def name(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class Customer(AbstractBaseModel):
@@ -92,3 +91,14 @@ class SocialProfile(AbstractBaseModel):
 
     def __str__(self):
         return self.influencer.user.username
+
+
+class InfluencerPreference(AbstractBaseModel):
+    influencer = models.ForeignKey(Influencer, on_delete=models.CASCADE, related_name="influencerpreferences")
+    preferred_platforms = models.JSONField(default=list)
+    min_targetted_age = models.FloatField(default=1)
+    max_targetted_age = models.FloatField(default=250)
+    preferred_brand_types = models.JSONField(default=list)
+
+    def __str__(self):
+        return self.influencer.user.email

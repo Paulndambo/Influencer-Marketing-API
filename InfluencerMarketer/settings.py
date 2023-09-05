@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.payments',
     'apps.analytics',
     'apps.notifications',
+    'apps.reports',
     #'apps.queue_system',
 ]
 
@@ -80,7 +81,7 @@ WSGI_APPLICATION = 'InfluencerMarketer.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -98,9 +99,6 @@ DATABASES = {
         "PORT": 5432,
     }
 }
-"""
-
-
 
 
 # Password validation
@@ -131,7 +129,8 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
+
 
 
 # Static files (CSS, JavaScript, Images)
@@ -167,6 +166,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         #'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        #'rest_framework_csv.renderers.CSVRenderer',
+    ),
+    'DEFAULT_VERSIONING_CLASS': 'apps.core.versioning.HeaderVersioning',
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],

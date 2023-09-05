@@ -10,3 +10,5 @@ pillow
 pika
 drf_yasg
 psycopg2-binary
+celery
+djangorestframework-csv

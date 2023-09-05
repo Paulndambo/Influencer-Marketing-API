@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: celery-configmap
+data:
+  BROKER_URL: amqps://qiqdvcyl:KPtRQ1jnfpuF7NNuAaVi9tynarNPc6XH@hummingbird.rmq.cloudamqp.com/qiqdvcyl
+  CURRENT_ENVIRONMENT: PRODUCTION
+  POSTGRES_DB: influencer_marketing
+  OSTGRES_USER: paulndambo
+  POSTGRES_PASSWORD: ePKXDMecSaceNBSK1xHTXjQIrgpe1AVX
+  DB_HOST: dpg-cjo5vc358phs738p1d4g-a.frankfurt-postgres.render.com
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: celery-beat-configmap
+data:
+  BROKER_URL: amqps://qiqdvcyl:KPtRQ1jnfpuF7NNuAaVi9tynarNPc6XH@hummingbird.rmq.cloudamqp.com/qiqdvcyl
+  CURRENT_ENVIRONMENT: PRODUCTION
+  POSTGRES_DB: influencer_marketing
+  OSTGRES_USER: paulndambo
+  POSTGRES_PASSWORD: ePKXDMecSaceNBSK1xHTXjQIrgpe1AVX
+  DB_HOST: dpg-cjo5vc358phs738p1d4g-a.frankfurt-postgres.render.com
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-configmap
+data:
+  BROKER_URL: amqps://qiqdvcyl:KPtRQ1jnfpuF7NNuAaVi9tynarNPc6XH@hummingbird.rmq.cloudamqp.com/qiqdvcyl
+  CURRENT_ENVIRONMENT: PRODUCTION
+  POSTGRES_DB: influencer_marketing
+  OSTGRES_USER: paulndambo
+  POSTGRES_PASSWORD: ePKXDMecSaceNBSK1xHTXjQIrgpe1AVX
+  DB_HOST: dpg-cjo5vc358phs738p1d4g-a.frankfurt-postgres.render.com

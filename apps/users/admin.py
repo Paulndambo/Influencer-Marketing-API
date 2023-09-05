@@ -1,5 +1,6 @@
 from django.contrib import admin
-from apps.users.models import User, Customer, Influencer
+
+from apps.users.models import Customer, Influencer, InfluencerPreference, User
 
 
 # Register your models here.
@@ -9,6 +10,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Customer)
+admin.site.register(InfluencerPreference)
 
 
 @admin.register(Influencer)

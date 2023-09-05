@@ -1,5 +1,7 @@
 from django.contrib import admin
-from apps.analytics.models import Engagement, PromotionCampaign
+
+from apps.analytics.models import (Engagement, EngagementComment,
+                                   PromotionCampaign)
 
 
 # Register your models here.
@@ -13,8 +15,14 @@ class EngagementAdmin(admin.ModelAdmin):
         "status",
         "customer_ip",
         "device_id",
+        "city",
+        "country"
     ]
 
+
+@admin.register(EngagementComment)
+class EngagementCommentAdmin(admin.ModelAdmin):
+    list_display = ["uuid", "campaign", "text", "customer_ip", "device_id", "city", "country"]
 
 @admin.register(PromotionCampaign)
 class PromotionCampaignAdmin(admin.ModelAdmin):

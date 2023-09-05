@@ -1,6 +1,7 @@
 import os
 
-from rest_framework import status
+import requests
+from rest_framework import generics, status
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -9,15 +10,22 @@ from rest_framework.viewsets import ModelViewSet
 
 from apps.analytics.engagement_methods.create_engagements import \
     create_engagement
-from apps.analytics.models import Engagement, PromotionCampaign
-from apps.analytics.serializers import (EngagementSerializer,
+from apps.analytics.models import (Engagement, EngagementComment,
+                                   PromotionCampaign)
+from apps.analytics.serializers import (EngagementCommentCreateSerializer,
+                                        EngagementCommentSerializer,
+                                        EngagementSerializer,
+                                        InfluencerAnalyticsSerializer,
                                         PromotionCampaignSerializer)
+from apps.core.location_processor import get_customer_location_details
+from apps.core.utm_constructor import utm_constructor
+from apps.products.models import Product
 from apps.users.models import Influencer
 
 # Create your views here.
 current_env = os.environ.get("CURRENT_ENVIRONMENT", "DEVELOPMENT")
 
-BACKEND_URL = "http://127.0.0.1:8000/products"
+BACKEND_URL = "http://127.0.0.1:3000/products"
 if current_env == "PRODUCTION":
     BACKEND_URL = "https://influencer-marketing-api.onrender.com/products"
 
@@ -31,7 +39,7 @@ class PromotionCampaignViewSet(ModelViewSet):
     1. POST
         - product: The product being promoted on the campaign.
         - user: The current user, who is the influencer promoting the product.
-    
+
     Returns:
     - json_data: A response based on current user;-
         - if influencer, returns only campaigns posted by them.
@@ -42,6 +50,9 @@ class PromotionCampaignViewSet(ModelViewSet):
     queryset = PromotionCampaign.objects.all()
     serializer_class = PromotionCampaignSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_serializer_context(self):
+        return {"request": self.request}
 
     def get_queryset(self):
         user = self.request.user
@@ -57,29 +68,48 @@ class PromotionCampaignViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         try:
             data = request.data
-            product = data.get("product")
+            product_id = data.get("product")
             user = data.get("user")
 
             influencer = Influencer.objects.get(user_id=user)
-            campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer.id}"
+            product = Product.objects.get(id=product_id)
+            #campaign_url = f"{BACKEND_URL}/{product}/?ref={influencer.id}"
 
-            campaign_object = {
-                "influencer_user_id": user,
-                "product_id": product,
-                "campaign_url": campaign_url,
-            }
-            print(campaign_object)
+            product_url = f"{product.product_url}/{product.id}/"
+
+            tiktok_url, facebook_url, twitter_url, instagram_url, youtube_url, threads_url, email_url, snapchat_url, linkedin_url = utm_constructor(
+                product_url, product.id, influencer.id)
 
             PromotionCampaign.objects.create(
-                influencer=influencer, product_id=product, campaign_url=campaign_url
+                influencer=influencer,
+                product=product,
+                campaign_url=product_url,
+                tiktok_url=tiktok_url,
+                twitter_url=twitter_url,
+                threads_url=threads_url,
+                instagram_url=instagram_url,
+                snapchat_url=snapchat_url,
+                youtube_url=youtube_url,
+                facebook_url=facebook_url,
+                linkedin_url=linkedin_url,
+                email_url=email_url
             )
 
             return Response(
                 {
-                    "product": product,
+                    "product": product.id,
                     "influencer": influencer.user.email,
-                    "campaign_url": campaign_url,
+                    "campaign_url": product_url,
                     "environment": current_env,
+                    "tiktok_url": tiktok_url,
+                    "twitter_url": twitter_url,
+                    "threads_url": threads_url,
+                    "instagram_url": instagram_url,
+                    "snapchat_url": snapchat_url,
+                    "youtube_url": youtube_url,
+                    "facebook_url": facebook_url,
+                    "linkedin_url": linkedin_url,
+                    "email_url": email_url
                 },
                 status=status.HTTP_201_CREATED,
             )
@@ -106,7 +136,6 @@ class EngagementViewSet(ModelViewSet):
     queryset = Engagement.objects.all()
     serializer_class = EngagementSerializer
     permission_classes = [IsAuthenticated]
-
 
     def get_queryset(self):
         user = self.request.user
@@ -137,22 +166,39 @@ class ViewsAndClicksAPIView(APIView):
 
     def post(self, request):
         try:
-            influencer = request.data.get("influencer")
-            product = request.data.get("product")
+            #influencer = request.data.get("influencer")
+            #product = request.data.get("product")
+            campaign = str(request.data.get("utm_campaign"))
             ip_address = request.data.get("customer_ip")
             device_id = request.data.get("device_id")
-            
+            source = request.data.get("utm_source")
+
+            campaign_items = campaign.split("-")
+            product = int(campaign_items[0])
+            influencer = int(campaign_items[1])
+
+
+            reqUrl = f"https://ipapi.co/{ip_address}/json/"
+
+            location = get_customer_location_details(reqUrl)
+            country = location.get("country_name")
+            city = location.get("city")
+
             # Check Fraudulent Activity
             # Same IP, Device ID and Product on multiple records will be flagged as fraud
-            existing_engagement = Engagement.objects.filter(
-                device_id=device_id, customer_ip=ip_address, product_id=product
-            ).first()
 
-            ## This gets the specific campaign posted by the influencer on the product
-            current_campaign = PromotionCampaign.objects.filter(
-                product_id=product, influencer_id=influencer
-            ).first()
+            # existing_engagement = Engagement.objects.filter(
+            #    device_id=device_id, customer_ip=ip_address, product_id=product
+            # ).first()
 
+            # This gets the specific campaign posted by the influencer on the product
+            # current_campaign = PromotionCampaign.objects.filter(
+            #    product_id=product, influencer_id=influencer
+            # ).first()
+            params = request.query_params
+            print(f"Query Params: {params}")
+
+            """
             create_engagement(
                 existing_engagement=existing_engagement,
                 current_campaign=current_campaign,
@@ -160,7 +206,11 @@ class ViewsAndClicksAPIView(APIView):
                 influencer=influencer,
                 device_id=device_id,
                 ip_address=ip_address,
+                country=country,
+                city=city,
+                source=source
             )
+            """
 
             return Response(
                 {
@@ -168,9 +218,32 @@ class ViewsAndClicksAPIView(APIView):
                         "influencer": influencer,
                         "product": product,
                         "device_id": device_id,
+                        "location": {
+                            "country": country,
+                            "city": city
+                        },
+                        "source": source
                     }
                 },
                 status=status.HTTP_201_CREATED,
             )
         except Exception as e:
             raise e
+
+
+class EngagementCommentViewSet(ModelViewSet):
+    queryset = EngagementComment.objects.all()
+    serializer_class = EngagementCommentSerializer
+
+    def get_serializer_context(self):
+        return {"campaign_pk": self.kwargs.get("campaign_pk")}
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return EngagementCommentCreateSerializer
+        return EngagementCommentSerializer
+
+
+class InfluencerAnalyticsAPIView(generics.ListAPIView):
+    queryset = Influencer.objects.all()
+    serializer_class = InfluencerAnalyticsSerializer
