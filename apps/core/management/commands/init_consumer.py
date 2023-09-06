@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand
+
 from apps.core.consumer import BaseConsumer
+
 #from apps.queue_system.consumer import BaseConsumer
 
 

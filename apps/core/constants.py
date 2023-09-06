@@ -2,7 +2,6 @@ import hashlib
 import random
 import string
 
-
 ROLE_CHOICES = (
     ("customer", "Customer"),
     ("influencer", "Influencer"),

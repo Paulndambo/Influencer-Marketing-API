@@ -1,10 +1,8 @@
-
-
 import json
 import os
 
-from django.conf import settings
 import pika
+from django.conf import settings
 
 BROKER_URL = settings.BROKER_URL
 

@@ -6,7 +6,6 @@ from InfluencerMarketer.celery import app
 def print_hello_world():
     print("**************Hello World***************")
 
-        
 
 app.conf.beat_schedule = {
     "run-every-2-seconds": {"task": "print_hello_world", "schedule": 2},

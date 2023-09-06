@@ -18,12 +18,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Environment Variables
-ENV CURRENT_ENVIRONMENT=PRODUCTION
-ENV POSTGRES_DB=influencer_marketing
-ENV POSTGRES_USER=paulndambo
-ENV POSTGRES_PASSWORD=ePKXDMecSaceNBSK1xHTXjQIrgpe1AVX
-ENV DB_HOST=dpg-cjo5vc358phs738p1d4g-a.frankfurt-postgres.render.com
-
 # Expose the desired port (assuming your Django app uses port 8000)
 EXPOSE 8000
 
