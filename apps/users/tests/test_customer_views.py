@@ -37,20 +37,18 @@ class TestCustomerView(TestCase):
         res = self.client.post(customers_url, payload)
         self.assertEqual(res.status_code, 201)
 
-        
-
-    
     def test_update_customer(self):
         self.test_customer.refresh_from_db()
 
-        #customer.refresh_from_db()
+        # customer.refresh_from_db()
         updated_payload = {
             "user": self.test_customer.user.id,
             "phone_number": "0746740960",
             "address": "228-90119, Nairobi - Kenya"
         }
-    
-        res = self.client.put(f"{customers_url}/{self.test_customer.id}/", updated_payload, content_type="application/json")
+
+        res = self.client.put(f"{customers_url}/{self.test_customer.id}/",
+                              updated_payload, content_type="application/json")
         return
         self.assertTrue(res.status_code, 200)
 
