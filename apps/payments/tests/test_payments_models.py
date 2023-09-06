@@ -7,7 +7,7 @@ from apps.products.models import Product
 from apps.users.models import Customer, Influencer, User
 
 
-class WalletTestCase(TestCase):
+class WalletAndPaymentRecordTestCase(TestCase):
     def setUp(self) -> None:
         self.customer_user = User.objects.create(
             username="testcustomer",
@@ -43,22 +43,43 @@ class WalletTestCase(TestCase):
             promotion_budget=500,
             customer=self.customer
         )
-        
-        return super().setUp()
-    
-    def test_create_wallet(self):
-        wallet = Wallet.objects.create(
-            user=self.influencer_user, 
-            withdrawn=0,
-            balance=0
-        )
 
-        self.assertEqual(str(wallet), self.influencer_user.email)
-
-    def test_wallet_balance_is_decimal(self):
-        wallet = Wallet.objects.create(
+        self.wallet = Wallet.objects.create(
             user=self.influencer_user, 
             withdrawn=0,
             balance=0.0
         )
-        self.assertTrue(isinstance(wallet.balance, Decimal) or isinstance(wallet.balance, float))
+        
+        return super().setUp()
+    
+    def test_create_wallet(self):
+        self.assertEqual(str(self.wallet), self.influencer_user.email)
+
+    def test_wallet_balance_is_decimal(self):
+        self.assertTrue(isinstance(self.wallet.balance, Decimal) or isinstance(self.wallet.balance, float))
+
+    def test_wallet_recharge(self):
+        self.wallet.balance += 56000.0
+        self.wallet.save()
+        self.assertGreater(self.wallet.balance, 0)
+
+
+    def test_create_payment_record(self):
+        payment = PaymentRecord.objects.create(
+            influencer=self.influencer,
+            product = self.product,
+            amount=2500.0
+        )
+
+        self.assertEqual(str(payment), f"{self.influencer_user.username} paid {payment.amount} for promoting {self.product.name}")
+
+    def test_payment_creation_updates(self):
+        payment = PaymentRecord.objects.create(
+            influencer=self.influencer,
+            product = self.product,
+            amount=2500.0
+        )
+        self.wallet.balance += payment.amount
+        self.wallet.save()
+
+        self.assertEqual(self.wallet.balance, 2500.0)
