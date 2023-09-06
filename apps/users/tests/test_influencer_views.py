@@ -109,6 +109,38 @@ class TestInfluencerSocialProfileView(InfluencerComponentsBaseTestCase):
         res = self.client.post(f"/users/influencers/{self.influencer.id}/social-profiles/", payload)
         self.assertEqual(res.status_code, 201)
 
+    def test_social_profile_update(self):
+        self.influencer.refresh_from_db()
+
+        updated_payload = {
+            "influencer": self.influencer.id,
+            "instagram": f"https://instgram.com/@{self.user.username}/{self.user.email}",
+            "facebook": f"https://facebook.com/@{self.user.username}/{self.user.email}",
+            "twitter": f"https://twitter.com/@{self.user.username}/{self.user.email}",
+            "tiktok": f"https://tiktok.com/@{self.user.username}/{self.user.email}",
+            "threads": f"https://threads.com/@{self.user.username}/{self.user.email}",
+            "youtube": f"https://youtube.com/@{self.user.username}/{self.user.email}",
+            "telegram": f"https://telegram.com/@{self.user.username}/{self.user.email}",
+            "snapchat": f"https://snapchar.com/@{self.user.username}/{self.user.email}",
+            "whatsapp_number": self.influencer.phone_number,
+        }
+
+        profiles = SocialProfile.objects.create(
+            influencer=self.influencer,
+            instagram=f"https://instgram.com/@{self.user.username}",
+            facebook=f"https://facebook.com/@{self.user.username}",
+            twitter=f"https://twitter.com/@{self.user.username}",
+            tiktok=f"https://tiktok.com/@{self.user.username}",
+            threads=f"https://threads.com/@{self.user.username}",
+            youtube=f"https://youtube.com/@{self.user.username}",
+            telegram=f"https://telegram.com/@{self.user.username}",
+            snapchat=f"https://snapchar.com/@{self.user.username}",
+            whatsapp_number=self.influencer.phone_number,
+        )
+
+        res = self.client.put(f"/users/influencers/{self.influencer.id}/social-profiles/{profiles.id}/", updated_payload, content_type="application/json", format="json")
+        self.assertEqual(res.status_code, 200)
+
     def test_delete_social_profile(self):
         self.influencer.refresh_from_db()
 
@@ -125,8 +157,7 @@ class TestInfluencerSocialProfileView(InfluencerComponentsBaseTestCase):
             whatsapp_number=self.influencer.phone_number,
         )
 
-        res = self.client.delete(
-            f"/users/influencers/{self.influencer.id}/social-profiles/{profiles.id}/")
+        res = self.client.delete(f"/users/influencers/{self.influencer.id}/social-profiles/{profiles.id}/")
         self.assertEqual(res.status_code, 204)
 
 
