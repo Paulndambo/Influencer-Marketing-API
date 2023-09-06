@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer-deployment
+spec:
+  selector:
+    matchLabels:
+      app: consumer-deployment
+  template:
+    metadata:
+      labels:
+        app: consumer-deployment
+    spec:
+      containers:
+      - name: consumer-deployment
+        image: 40781998/influencer-marketing-api:latest
+        command: ["python", "manage.py", "init_consumer"]
+        envFrom:
+        - configMapRef:
+            name: backend-configmap
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        

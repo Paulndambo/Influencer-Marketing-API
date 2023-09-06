@@ -17,10 +17,10 @@ class ProductViewSet(ModelViewSet):
         - creating, edit, and deleting products.
 
     Parameters:
-    - None
+    - None.
 
     Returns:
-    - json_data: Response data based on the current user
+    - json_data: Response data based on the current user.
         - if not logged in, the user will see all posted products.
         - if user is customer, they will see all the products they have posted.
         - if user is influencer, they will see all products which they have not promoted yet.
@@ -33,13 +33,17 @@ class ProductViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {"request": self.request}
+        
 
     def get_queryset(self):
         user = self.request.user
-        print(f"Current User: {user}")
+        
+
         if user.is_authenticated:
             if user.role == "customer":
                 return self.queryset.filter(customer__user=user)
+
+
             elif user.role == "influencer":
                 influencer = Influencer.objects.get(user=user)
                 influencer_promos = list(influencer.campaigns.values_list("product", flat=True))
