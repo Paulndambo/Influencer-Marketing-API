@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from apps.payments.models import Wallet, PaymentRecord
+
+from apps.payments.models import PaymentRecord, Wallet
 
 
 class WalletSerializer(serializers.ModelSerializer):

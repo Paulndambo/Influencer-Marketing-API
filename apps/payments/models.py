@@ -10,7 +10,7 @@ class Wallet(AbstractBaseModel):
     balance = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.user.email
+        return str(self.id)
 
 
 class PaymentRecord(AbstractBaseModel):
@@ -19,4 +19,4 @@ class PaymentRecord(AbstractBaseModel):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.influencer.user.username} paid {self.amount} for promoting {self.product.name}"
+        return str(self.id)

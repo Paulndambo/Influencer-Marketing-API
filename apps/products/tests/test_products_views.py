@@ -14,10 +14,8 @@ class TestProductView(TestCase):
     def setUp(self) -> None:
 
         self.client = APIClient()
-        self.user = User.objects.create_user(
-            username='testuser', password='testpassword', role="customer")
-        self.customer = Customer.objects.create(
-            user=self.user, phone_number="0745491093", address="228-90119, Matuu, Kenya")
+        self.user = User.objects.create_user(username='testuser', password='testpassword', role="customer")
+        self.customer = Customer.objects.create(user=self.user, phone_number="0745491093", address="228-90119, Matuu, Kenya")
 
         self.payload = {
             "name": "Test Product",

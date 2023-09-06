@@ -1,12 +1,11 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from apps.payments.views import WalletViewSet, PaymentRecordViewSet
+from apps.payments.views import PaymentRecordViewSet, WalletViewSet
 
 router = DefaultRouter()
 router.register("wallets", WalletViewSet, basename="wallets")
-router.register(
-    "influencer-payments", PaymentRecordViewSet, basename="influencer-payments"
+router.register("payments", PaymentRecordViewSet, basename="payments"
 )
 
 urlpatterns = [
