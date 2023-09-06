@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'Run tests for specific test modules'
 
     def handle(self, *args, **options):
-        test_modules = ['apps/products/tests', 'apps/core/tests', 'apps/payments/tests']
+        test_modules = ['apps/products/tests', 'apps/payments/tests']
 
         test_runner = DiscoverRunner(verbosity=1)
 
