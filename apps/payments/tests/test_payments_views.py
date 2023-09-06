@@ -1,10 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
-from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
-from apps.payments.models import PaymentRecord, Wallet
 from apps.products.models import Product
 from apps.users.models import Customer, Influencer, User
 

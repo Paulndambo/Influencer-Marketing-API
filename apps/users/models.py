@@ -95,10 +95,10 @@ class SocialProfile(AbstractBaseModel):
 
 class InfluencerPreference(AbstractBaseModel):
     influencer = models.ForeignKey(Influencer, on_delete=models.CASCADE, related_name="influencerpreferences")
-    preferred_platforms = models.CharField(max_length=255, null=True)#JSONField(default=list)
+    preferred_platforms = models.JSONField(default=list)
     min_targetted_age = models.FloatField(default=1)
     max_targetted_age = models.FloatField(default=250)
-    preferred_brand_types = models.CharField(max_length=255, null=True)#JSONField(default=list)
+    preferred_brand_types = models.JSONField(default=list)
 
     def __str__(self):
         return self.influencer.user.email

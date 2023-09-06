@@ -1,8 +1,8 @@
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
-from apps.users.models import Customer, Influencer, User
+from apps.users.models import User
 
 
 @receiver(post_save, sender=User)
