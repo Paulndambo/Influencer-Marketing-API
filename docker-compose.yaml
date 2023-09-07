@@ -1,0 +1,62 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_DB=influencer_marketing
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=postgres
+      - DB_HOST=postgres
+      - POSTGRES_PORT=5432
+
+    depends_on:
+      - postgres
+      - rabbitmq
+      #- celery
+
+  celery:
+    build: .
+    command: ["celery", "-A", "InfluencerMarketer", "worker", "--loglevel=info"]
+    depends_on:
+      - postgres
+      - rabbitmq
+      - backend
+      
+
+  celery-beat:
+    build: .
+    command: ["celery", "-A", "InfluencerMarketer", "beat", "--loglevel=info"]
+    depends_on:
+  #    - postgres
+      - celery
+      - rabbitmq
+      - backend
+
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=influencer_marketing
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=postgres
+      - DB_HOST=postgres
+      - POSTGRES_PORT=5432
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+
+volumes:
+  postgres_data:
+  rabbitmq_data:

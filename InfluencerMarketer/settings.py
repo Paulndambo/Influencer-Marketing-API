@@ -185,4 +185,5 @@ CSRF_TRUSTED_ORIGINS = ["https://influencer-marketing-api.onrender.com"]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-BROKER_URL = "amqps://qiqdvcyl:KPtRQ1jnfpuF7NNuAaVi9tynarNPc6XH@hummingbird.rmq.cloudamqp.com/qiqdvcyl"
+#BROKER_URL = "amqps://qiqdvcyl:KPtRQ1jnfpuF7NNuAaVi9tynarNPc6XH@hummingbird.rmq.cloudamqp.com/qiqdvcyl"
+BROKER_URL = 'amqp://rabbitmq'

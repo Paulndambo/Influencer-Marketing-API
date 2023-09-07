@@ -3,6 +3,7 @@ from decimal import Decimal
 from apps.payments.models import PaymentRecord, Wallet
 from apps.products.models import Product
 
+
 def calculate_and_distribute_payment(product: Product):
     """
     Takes in a product

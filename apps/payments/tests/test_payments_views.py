@@ -2,11 +2,13 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 
+from apps.payments.models import PaymentRecord, Wallet
 from apps.products.models import Product
 from apps.users.models import Customer, Influencer, User
 
 wallets_url = reverse("wallets-list")
 payments_url = reverse("payments-list")
+
 
 class WalletsAndPaymentsViewTestCase(TestCase):
     def setUp(self):
@@ -54,17 +56,17 @@ class WalletsAndPaymentsViewTestCase(TestCase):
         )
 
         #self.token = Token.objects.create(user=self.user)
-        
+
         self.client.login(username="testinfluencer", password="testpassword")
 
-        #return super().setUp()
+        # return super().setUp()
 
     def test_get_wallets_list(self):
         res = self.client.get(wallets_url)
         self.assertEqual(res.status_code, 200)
 
-
     def test_create_wallet(self):
+        self.influencer_user.refresh_from_db()
         payload = {
             "user": self.influencer_user.id,
             "balance": 500.00,
@@ -73,19 +75,55 @@ class WalletsAndPaymentsViewTestCase(TestCase):
         res = self.client.post(wallets_url, payload)
         self.assertEqual(res.status_code, 201)
 
-    
-    def test_get_payment_records(self):
-        #self.client.force_authenticate(user=self.user)
-        res = self.client.get("/payments/payments/")
+    def test_wallet_update(self):
+        self.influencer_user.refresh_from_db()
 
+        wallet = Wallet.objects.create(
+            user=self.influencer_user,
+            withdrawn=0,
+            balance=200.0
+        )
+
+        updated_payload = {
+            "user": self.influencer_user.id,
+            "withdrawn": 80,
+            "balance": 120
+        }
+        res = self.client.put(
+            f"/payments/wallets/{wallet.id}/", updated_payload, format="json")
+        self.assertEqual(res.status_code, 200)
+
+    def test_get_payment_records(self):
+        res = self.client.get("/payments/payments/")
         self.assertEqual(res.status_code, 200)
 
     def test_create_payment_record(self):
+        self.product.refresh_from_db()
+        self.influencer.refresh_from_db()
+
         payload = {
             "influencer": self.influencer.id,
             "product": self.product.id,
             "amount": 5000.0
         }
-        print(payload)
         res = self.client.post("/payments/payments/", payload)
         self.assertEqual(res.status_code, 201)
+
+    def test_payment_record_update(self):
+        self.product.refresh_from_db()
+        self.influencer.refresh_from_db()
+
+        payment = PaymentRecord.objects.create(
+            influencer=self.influencer,
+            product=self.product,
+            amount=2500.0
+        )
+
+        updated_payload = {
+            "influencer": self.influencer.id,
+            "product": self.product.id,
+            "amount": 3500.0
+        }
+        res = self.client.put(
+            f"/payments/payments/{payment.id}/", updated_payload, format="json")
+        self.assertEqual(res.status_code, 200)
