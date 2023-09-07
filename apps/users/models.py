@@ -93,6 +93,22 @@ class SocialProfile(AbstractBaseModel):
         return self.influencer.user.username
 
 
+class SocialProfileData(AbstractBaseModel):
+    influencer = models.ForeignKey(Influencer, on_delete=models.CASCADE)
+    platform = models.CharField(max_length=255)
+    followers = models.IntegerField(default=0)
+    following = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
+    comments = models.IntegerField(default=0)
+    description = models.TextField(null=True)
+    username = models.CharField(max_length=255)
+    location = models.CharField(max_length=255, null=True)
+    profile_photo = models.URLField(max_length=100, null=True)
+
+    def __str__(self):
+        return self.username
+
+
 class InfluencerPreference(AbstractBaseModel):
     influencer = models.ForeignKey(Influencer, on_delete=models.CASCADE, related_name="influencerpreferences")
     preferred_platforms = models.JSONField(default=list)
