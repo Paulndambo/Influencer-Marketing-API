@@ -1,6 +1,11 @@
 import os
 from pathlib import Path
 
+from decouple import config
+
+#config.read_env('.env')
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
     'apps.analytics',
     'apps.notifications',
     'apps.reports',
+    'apps.integrations',
     #'apps.queue_system',
 ]
 
@@ -187,3 +193,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 BROKER_URL = "amqps://qiqdvcyl:KPtRQ1jnfpuF7NNuAaVi9tynarNPc6XH@hummingbird.rmq.cloudamqp.com/qiqdvcyl"
 #BROKER_URL = 'amqp://rabbitmq'
+
+CONSUMER_KEY = config("CONSUMER_KEY")
+CONSUMER_SECRET = config("CONSUMER_SECRET")
+ACCESS_TOKEN = config("ACCESS_TOKEN")
+ACCESS_TOKEN_SECRET = config("ACCESS_TOKEN_SECRET")
