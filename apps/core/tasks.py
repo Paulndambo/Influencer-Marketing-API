@@ -8,8 +8,7 @@ def print_hello_world():
     publisher = BasePublisher(
         routing_key="hello_world",
         body={
-            "name": "Paul Ndambo",
-            "position": "Python Developer"
+            "text": "The publisher is up and running!!"
         }
     )
     publisher.run()
