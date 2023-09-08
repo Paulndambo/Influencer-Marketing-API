@@ -11,10 +11,9 @@ class ProductAdmin(admin.ModelAdmin):
         "name",
         "price",
         "customer",
-        "revenue_distributed",
         "promotion_ends_on",
         "target_platforms",
-        "brand_type",
+        "promotion_budget_paid"
     ]
 
 @admin.register(ProductCampaignPreference)

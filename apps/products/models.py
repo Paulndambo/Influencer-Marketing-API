@@ -32,6 +32,7 @@ class Product(AbstractBaseModel):
     target_platforms = models.JSONField(default=list)
     min_followers_on_target_platform = models.IntegerField(default=100)
     min_engagement_percentage = models.FloatField(default=0)
+    promotion_budget_paid = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name 

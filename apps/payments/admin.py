@@ -1,5 +1,8 @@
 from django.contrib import admin
-from apps.payments.models import Wallet, PaymentRecord
+
+from apps.payments.models import MpesaTransaction, PaymentRecord, Wallet
+
+
 # Register your models here.
 @admin.register(Wallet)
 class WalletAdmin(admin.ModelAdmin):
@@ -8,3 +11,7 @@ class WalletAdmin(admin.ModelAdmin):
 @admin.register(PaymentRecord)
 class PaymentRecordAdmin(admin.ModelAdmin):
     list_display = ["id", "influencer", "product", "amount"]
+
+@admin.register(MpesaTransaction)
+class MpesaTransactionAdmin(admin.ModelAdmin):
+    list_display = ["product", "PhoneNumber", "MpesaReceiptNumber", "Amount", "TransactionDate"]
