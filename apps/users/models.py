@@ -40,6 +40,12 @@ class Influencer(AbstractBaseModel):
     city = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
     profile_photo = models.ImageField(upload_to="profile_photos/", null=True)
+    preferred_platforms = models.JSONField(default=list)
+    min_targetted_age = models.FloatField(default=1)
+    max_targetted_age = models.FloatField(default=250)
+    preferred_brand_types = models.JSONField(default=list)
+    minimum_budget_consideration = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    average_following = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return self.user.username

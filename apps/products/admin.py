@@ -12,7 +12,9 @@ class ProductAdmin(admin.ModelAdmin):
         "price",
         "customer",
         "revenue_distributed",
-        "promotion_ends_on"
+        "promotion_ends_on",
+        "target_platforms",
+        "brand_type",
     ]
 
 @admin.register(ProductCampaignPreference)

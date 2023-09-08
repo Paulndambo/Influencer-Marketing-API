@@ -137,13 +137,14 @@ class InfluencerProfileVideoSerializer(serializers.ModelSerializer):
 
 
 class InfluencerSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
     comments_collected = serializers.SerializerMethodField()
     likes_collected = serializers.SerializerMethodField()
     total_likes = serializers.SerializerMethodField()
     total_views_collected = serializers.SerializerMethodField()
     total_clicks_collected = serializers.SerializerMethodField()
     total_products_promoted = serializers.SerializerMethodField()
-    promotions = serializers.SerializerMethodField()
+    #promotions = serializers.SerializerMethodField()
     geographic_analysis = serializers.SerializerMethodField()
     clicks_and_views_by_country = serializers.SerializerMethodField()
     clicks_and_views_by_city = serializers.SerializerMethodField()
@@ -152,8 +153,11 @@ class InfluencerSerializer(serializers.ModelSerializer):
         model = Influencer
         fields = "__all__"
 
-    def get_promotions(self, obj):
-        return obj.campaigns.values()
+    #def get_promotions(self, obj):
+    #    return obj.campaigns.values()
+
+    def get_username(self, obj):
+        return obj.user.username
 
     def get_geographic_analysis(self, obj):
         queryset = obj.engagements.values('country', 'city').annotate(
