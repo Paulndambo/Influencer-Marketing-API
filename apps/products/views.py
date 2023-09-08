@@ -25,7 +25,7 @@ class ProductViewSet(ModelViewSet):
         - if user is customer, they will see all the products they have posted.
         - if user is influencer, they will see all products which they have not promoted yet.
         - if user is admin, will see all the products.
-
+        
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -50,16 +50,8 @@ class ProductViewSet(ModelViewSet):
 
                 products = self.queryset.exclude(id__in=influencer_promos)
 
-                #influencer_preferences = list(influencer.influencerpreferences.values_list('preferred_platforms', flat=True))[0]
-                #influencer_preferred_brand_types = list(influencer.influencerpreferences.values_list('preferred_brand_types', flat=True))[0]
-                #product_preferences = ProductCampaignPreference.objects.filter(product__in=products)
-                
-
-                #print(type(influencer.preferred_platforms))
                 
                 product_ids = []
-
-
                 """1. Filter Based on preferred promotion platform"""
                 
                 for x in products:
