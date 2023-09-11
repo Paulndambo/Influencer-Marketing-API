@@ -2,7 +2,7 @@ from rest_framework import generics, serializers, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from apps.payments.models import MpesaTransaction
+from apps.payments.models import MpesaTransaction, Wallet
 from apps.products.models import Product
 
 from .mpesa_callback_data import mpesa_callback_data_distructure
@@ -36,6 +36,17 @@ class LipaNaMpesaCallbackAPIView(generics.CreateAPIView):
             if product:
                 product.promotion_budget_paid = True
                 product.save()
+
+                # product customer wallet
+                """
+                wallet = Wallet.objects.filter(user=product.customer.user).first()
+
+                if not wallet:
+                    wallet = Wallet.objects.create(user=product.customer.user, withdrawn=0, balance=product.promotion_budget)
+                else:
+                    wallet.balance += product.promotion_budget
+                    wallet.save()
+                """
 
             callback_data = mpesa_callback_data_distructure(data)
             mpesa_transaction = MpesaTransaction.objects.create(**callback_data)

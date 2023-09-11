@@ -6,7 +6,7 @@ from apps.payments.timestamp_to_time import convert_timestamp_to_datetime
 
 # Create your models here.
 class Wallet(AbstractBaseModel):
-    user = models.OneToOneField("users.User", on_delete=models.CASCADE)
+    user = models.OneToOneField("users.User", on_delete=models.CASCADE, related_name="userwallte")
     withdrawn = models.DecimalField(max_digits=10, decimal_places=2)
     balance = models.DecimalField(max_digits=10, decimal_places=2)
 

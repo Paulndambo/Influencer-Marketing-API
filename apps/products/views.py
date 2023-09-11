@@ -50,7 +50,7 @@ class ProductViewSet(ModelViewSet):
 
                 products = self.queryset.exclude(id__in=influencer_promos)
 
-                
+
                 product_ids = []
                 """1. Filter Based on preferred promotion platform"""
                 
@@ -68,7 +68,10 @@ class ProductViewSet(ModelViewSet):
                 products_by_brands =  products_by_platforms.filter(brand_type__in=influencer_preferred_brand_types)
 
                 """3. Filter based on minimum followers required to promote"""
-                return products_by_brands.filter(min_followers_on_target_platform__lte=int(influencer.average_following))
+                products_by_followers = products_by_brands.filter(min_followers_on_target_platform__lte=int(influencer.average_following))
+
+                """4. Filter based on promotion budget payment"""
+                return products_by_followers.filter(promotion_budget_paid=True)
                 
         return self.queryset
 

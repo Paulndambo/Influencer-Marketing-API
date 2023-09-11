@@ -210,3 +210,6 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL=False
 DEFAULT_FROM_EMAIL = "cryptoappdjango@gmail.com"
 SITE_EMAIL = "cryptoappdjango@gmail.com"
+
+
+MAIN_API_BACKEND = "http://localhost:8000"
