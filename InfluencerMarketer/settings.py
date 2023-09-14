@@ -69,7 +69,7 @@ ROOT_URLCONF = 'InfluencerMarketer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -198,3 +198,18 @@ CONSUMER_KEY = config("CONSUMER_KEY")
 CONSUMER_SECRET = config("CONSUMER_SECRET")
 ACCESS_TOKEN = config("ACCESS_TOKEN")
 ACCESS_TOKEN_SECRET = config("ACCESS_TOKEN_SECRET")
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = 'f1460349aeadff'
+EMAIL_HOST_PASSWORD = '42ee901822b317'
+EMAIL_PORT = '2525'
+EMAIL_HOST_PORT = '2525'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL=False
+DEFAULT_FROM_EMAIL = "cryptoappdjango@gmail.com"
+SITE_EMAIL = "cryptoappdjango@gmail.com"
+
+
+MAIN_API_BACKEND = "http://localhost:8000"

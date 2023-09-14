@@ -27,6 +27,12 @@ class Product(AbstractBaseModel):
     revenue_distributed = models.BooleanField(default=False)
     promotion_ends_on = models.DateTimeField(null=True, blank=True)
     brand_type = models.CharField(max_length=255, null=True, choices=BRAND_TYPES_CHOICES)
+    min_targetted_age = models.FloatField(default=1)
+    max_targetted_age = models.FloatField(default=250)
+    target_platforms = models.JSONField(default=list)
+    min_followers_on_target_platform = models.IntegerField(default=100)
+    min_engagement_percentage = models.FloatField(default=0)
+    promotion_budget_paid = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name 

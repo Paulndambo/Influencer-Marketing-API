@@ -59,8 +59,7 @@ class TestProductView(TestCase):
 
         product_patch_url = f"/products/{self.product.id}/"
 
-        res = self.client.put(
-            product_patch_url, serialized_data, format='json')
+        res = self.client.put(product_patch_url, serialized_data, format='json')
         self.assertEqual(res.status_code, 200)
 
     def test_product_delete(self):

@@ -40,6 +40,12 @@ class Influencer(AbstractBaseModel):
     city = models.CharField(max_length=255, null=True)
     country = models.CharField(max_length=255, null=True)
     profile_photo = models.ImageField(upload_to="profile_photos/", null=True)
+    preferred_platforms = models.JSONField(default=list)
+    min_targetted_age = models.FloatField(default=1)
+    max_targetted_age = models.FloatField(default=250)
+    preferred_brand_types = models.JSONField(default=list)
+    minimum_budget_consideration = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    average_following = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return self.user.username
@@ -91,6 +97,22 @@ class SocialProfile(AbstractBaseModel):
 
     def __str__(self):
         return self.influencer.user.username
+
+
+class SocialProfileData(AbstractBaseModel):
+    influencer = models.ForeignKey(Influencer, on_delete=models.CASCADE)
+    platform = models.CharField(max_length=255)
+    followers = models.IntegerField(default=0)
+    following = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
+    comments = models.IntegerField(default=0)
+    description = models.TextField(null=True)
+    username = models.CharField(max_length=255)
+    location = models.CharField(max_length=255, null=True)
+    profile_photo = models.URLField(max_length=100, null=True)
+
+    def __str__(self):
+        return self.username
 
 
 class InfluencerPreference(AbstractBaseModel):

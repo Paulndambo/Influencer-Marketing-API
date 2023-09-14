@@ -6,14 +6,15 @@ from rest_framework.test import APIClient
 from apps.products.models import Product, ProductCampaignPreference
 from apps.users.models import Customer, User
 
-#products_pref_url = reverse("preferences")
-
 
 class TestProductPreferenceView(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = User.objects.create_user(
-            username="customer", role="customer", email="customer@gmail.com", password="customer"
+            username="customer", 
+            role="customer", 
+            email="customer@gmail.com", 
+            password="customer"
         )
         self.customer = Customer.objects.create(
             user=self.user,
@@ -48,10 +49,7 @@ class TestProductPreferenceView(TestCase):
             "min_engagement_percentage": 10
         }
         res = self.client.post(f"/products/{self.product.id}/preferences/", payload)
-        response_content = res.json()
-        print(f"Post Response Content: {response_content}")
         self.assertEqual(res.status_code, 201)
-
 
 
     def test_product_preference_update(self):
@@ -76,8 +74,6 @@ class TestProductPreferenceView(TestCase):
         }
 
         res =self.client.put(f"/products/{self.product.id}/preferences/{product_preference.id}/", updated_payload, format="json")
-        response_content = res.json()
-        print(f"Update Response Content: {response_content}")
         self.assertEqual(res.status_code, 200)
 
     def test_product_preference_delete(self):

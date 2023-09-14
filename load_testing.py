@@ -1,5 +1,7 @@
 import asyncio
+
 import aiohttp
+
 
 async def make_request(session, url):
     async with session.get(url) as response:

@@ -25,7 +25,7 @@ class ProductViewSet(ModelViewSet):
         - if user is customer, they will see all the products they have posted.
         - if user is influencer, they will see all products which they have not promoted yet.
         - if user is admin, will see all the products.
-
+        
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -33,44 +33,46 @@ class ProductViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {"request": self.request}
-        
 
     def get_queryset(self):
         user = self.request.user
-        
 
         if user.is_authenticated:
             if user.role == "customer":
                 return self.queryset.filter(customer__user=user)
 
-
             elif user.role == "influencer":
                 influencer = Influencer.objects.get(user=user)
                 influencer_promos = list(influencer.campaigns.values_list("product", flat=True))
+                influencer_preferred_platforms = influencer.preferred_platforms
+                influencer_preferred_brand_types = influencer.preferred_brand_types
+                
 
                 products = self.queryset.exclude(id__in=influencer_promos)
 
-                influencer_preferences = list(influencer.influencerpreferences.values_list('preferred_platforms', flat=True))[0]
-                influencer_preferred_brand_types = list(influencer.influencerpreferences.values_list('preferred_brand_types', flat=True))[0]
-                product_preferences = ProductCampaignPreference.objects.filter(product__in=products)
 
                 product_ids = []
-
                 """1. Filter Based on preferred promotion platform"""
-
-                for x in product_preferences:
-                    for y in influencer_preferences:
-                        if y in x.target_platforms:
-                            product_ids.append(x.product.id)
-
-
-                products_by_platform_pref = products.filter(id__in=product_ids)
                 
-                #print(product_preferences)
+                for x in products:
+                    for y in influencer_preferred_platforms:
+                        if y in x.target_platforms:
+                            product_ids.append(x.id)
+
+                products_by_platforms = products.filter(id__in=product_ids)
+
+                print(f"Platforms: {products_by_platforms}")
+                
+                # print(product_preferences)
                 """2. Filter based on preferred brands"""
-                return products_by_platform_pref.filter(brand_type__in=influencer_preferred_brand_types)
+                products_by_brands =  products_by_platforms.filter(brand_type__in=influencer_preferred_brand_types)
 
+                """3. Filter based on minimum followers required to promote"""
+                products_by_followers = products_by_brands.filter(min_followers_on_target_platform__lte=int(influencer.average_following))
 
+                """4. Filter based on promotion budget payment"""
+                return products_by_followers.filter(promotion_budget_paid=True)
+                
         return self.queryset
 
 
