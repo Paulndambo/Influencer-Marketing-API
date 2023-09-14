@@ -16,6 +16,13 @@ BRAND_TYPES_CHOICES = (
     ("watches", "Watches"),
 )
 
+PROMOTION_PERIOD_CHOICES = (
+    ("days", "Days"),
+    ("hours", "Hours"),
+    ("weeks", "Weeks"),
+    ("months", "Months"),
+)
+
 class Product(AbstractBaseModel):
     name = models.CharField(max_length=255)
     product_url = models.URLField(null=True, max_length=500)
@@ -33,6 +40,9 @@ class Product(AbstractBaseModel):
     min_followers_on_target_platform = models.IntegerField(default=100)
     min_engagement_percentage = models.FloatField(default=0)
     promotion_budget_paid = models.BooleanField(default=False)
+    promotion_package = models.ForeignKey("payments.BillingCategory", on_delete=models.SET_NULL, null=True)
+    promotion_period = models.IntegerField(default=0)
+    promotion_period_in = models.CharField(max_length=255, choices=PROMOTION_PERIOD_CHOICES, null=True)
 
     def __str__(self):
         return self.name 

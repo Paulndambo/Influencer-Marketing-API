@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from apps.payments.models import MpesaTransaction, PaymentRecord, Wallet
+from apps.payments.models import (AdvertisementOrder, BillingCategory,
+                                  MpesaResponseData, MpesaTransaction,
+                                  PaymentRecord, Wallet)
 
 
 # Register your models here.
@@ -15,3 +17,18 @@ class PaymentRecordAdmin(admin.ModelAdmin):
 @admin.register(MpesaTransaction)
 class MpesaTransactionAdmin(admin.ModelAdmin):
     list_display = ["product", "PhoneNumber", "MpesaReceiptNumber", "Amount", "TransactionDate"]
+
+
+@admin.register(MpesaResponseData)
+class MpesaResponseDataAdmin(admin.ModelAdmin):
+    list_display = ["response_data", "response_description", "response_code"]
+
+
+@admin.register(BillingCategory)
+class BillingCategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "charge_per_hour"]
+
+
+@admin.register(AdvertisementOrder)
+class AdvertisementOrderAdmin(admin.ModelAdmin):
+    list_display = ["product", "advert_package", "promotion_period", "total_bill", "paid"]
