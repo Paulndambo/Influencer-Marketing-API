@@ -31,30 +31,32 @@ class LipaNaMpesaCallbackAPIView(generics.CreateAPIView):
         
         if serializer.is_valid(raise_exception=True):
 
-            product = Product.objects.filter(id=product_id).first()
-
-            if product:
-                product.promotion_budget_paid = True
-                product.save()
-
-                # product customer wallet
-                """
-                wallet = Wallet.objects.filter(user=product.customer.user).first()
-
-                if not wallet:
-                    wallet = Wallet.objects.create(user=product.customer.user, withdrawn=0, balance=product.promotion_budget)
-                else:
-                    wallet.balance += product.promotion_budget
-                    wallet.save()
-                """
-
             callback_data = mpesa_callback_data_distructure(data)
-            mpesa_transaction = MpesaTransaction.objects.create(**callback_data)
-            mpesa_transaction.product_id = product_id
-            mpesa_transaction.save()
 
-            print(serializer.validated_data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if callback_data == None:
+                return Response({"message": "There was an erorr!"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                product = Product.objects.filter(id=product_id).first()
+
+                if product:
+                    product.promotion_budget_paid = True
+                    product.save()
+                
+                    wallet = Wallet.objects.filter(user=product.customer.user).first()
+
+                    if not wallet:
+                        wallet = Wallet.objects.create(user=product.customer.user, withdrawn=0, balance=product.promotion_budget)
+                    else:
+                        wallet.balance += product.promotion_budget
+                        wallet.save()
+                
+
+                mpesa_transaction = MpesaTransaction.objects.create(**callback_data)
+                mpesa_transaction.product_id = product_id
+                mpesa_transaction.save()
+
+                print(serializer.validated_data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -75,7 +77,7 @@ class LipaNaMpesaAPIView(generics.CreateAPIView):
             mpesa.stk_push(
                 phone_number=data.get('phone_number'),
                 amount=int(amount),
-                callback_url=f"https://df3c-105-163-1-68.ngrok-free.app/integrations/lipa-na-mpesa-callback/?product={product_id}",
+                callback_url=f"https://8a4f-105-163-0-139.ngrok-free.app/integrations/lipa-na-mpesa-callback/?product={product_id}",
                 account_reference="Influencer Marketing API",
                 transaction_desc="This is wallet topup mpesa transaction"
             )

@@ -1,7 +1,10 @@
 from django.db.models import Q
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from apps.payments.models import AdvertisementOrder
 from apps.products.models import Product, ProductCampaignPreference
 from apps.products.serializers import (ProductCampaignPreferenceSerializer,
                                        ProductSerializer)
@@ -33,6 +36,31 @@ class ProductViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {"request": self.request}
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        serializer = self.serializer_class(data=data)
+
+        if serializer.is_valid(raise_exception=True):
+            #product = Product.objects.create(**data)
+            product = serializer.save()
+
+            advert_order = AdvertisementOrder.objects.create(
+                product=product,
+                advert_package=product.promotion_package,
+                promotion_period=f"{product.promotion_period} {product.promotion_period_in}",
+            )
+            advert_order.calculate_promotion_bill(
+                product.promotion_period,
+                package_cost=product.promotion_package.charge_per_hour,
+                period_in=product.promotion_period_in
+            )
+            #advert_order.save()
+
+            print(f"Product ID: {product.id}")
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_queryset(self):
         user = self.request.user

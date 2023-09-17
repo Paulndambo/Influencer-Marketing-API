@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from apps.payments.models import PaymentRecord, Wallet
-from apps.payments.serializers import PaymentRecordSerializer, WalletSerializer
+from apps.payments.models import BillingCategory, PaymentRecord, Wallet
+from apps.payments.serializers import (BillingCategorySerializer,
+                                       PaymentRecordSerializer,
+                                       WalletSerializer)
 
 
 # Create your views here.
@@ -31,3 +33,8 @@ class PaymentRecordViewSet(ModelViewSet):
     #    if user.is_superuser:
     #        return self.queryset
     #    return self.queryset.filter(user=user)
+
+class BillingCategoryViewSet(ModelViewSet):
+    queryset = BillingCategory.objects.all()
+    serializer_class = BillingCategorySerializer
+    permission_classes = [AllowAny]
