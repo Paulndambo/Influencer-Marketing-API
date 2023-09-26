@@ -16,7 +16,6 @@ class FluterWavePaymentProcessor:
         res = requests.get(PAYMENT_PLANS_URL, headers=headers)
         payment_plans = res.json()
 
-        #print(payment_plans)
         return payment_plans
         
 

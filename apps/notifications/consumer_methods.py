@@ -24,7 +24,6 @@ class NotificationConsumer:
             try:
                 distribute_promotion_budget(product)
                 product.revenue_distributed = True
-                #product.campaign_limit_reached = True
                 product.save()
 
             except Exception as e:
