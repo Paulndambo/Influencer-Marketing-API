@@ -32,7 +32,7 @@ class PaymentRecordViewSet(ModelViewSet):
 
         if user.is_superuser:
             return self.queryset
-        return self.queryset.filter(user=user)
+        return self.queryset.filter(influencer__user=user)
 
 class BillingCategoryViewSet(ModelViewSet):
     queryset = BillingCategory.objects.all()

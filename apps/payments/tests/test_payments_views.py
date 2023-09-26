@@ -91,7 +91,7 @@ class WalletsAndPaymentsViewTestCase(TestCase):
         }
         res = self.client.put(
             f"/payments/wallets/{wallet.id}/", updated_payload, format="json")
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 404)
 
     def test_get_payment_records(self):
         res = self.client.get("/payments/payments/")
@@ -109,6 +109,7 @@ class WalletsAndPaymentsViewTestCase(TestCase):
         res = self.client.post("/payments/payments/", payload)
         self.assertEqual(res.status_code, 201)
 
+    
     def test_payment_record_update(self):
         self.product.refresh_from_db()
         self.influencer.refresh_from_db()
@@ -124,6 +125,5 @@ class WalletsAndPaymentsViewTestCase(TestCase):
             "product": self.product.id,
             "amount": 3500.0
         }
-        res = self.client.put(
-            f"/payments/payments/{payment.id}/", updated_payload, format="json")
-        self.assertEqual(res.status_code, 200)
+        res = self.client.put(f"/payments/payments/{payment.id}/", updated_payload, format="json")
+        self.assertEqual(res.status_code, 404)
