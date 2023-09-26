@@ -1,5 +1,7 @@
 from django.urls import path
 
+from apps.integrations.payments.flutterwave.views import \
+    FlutterWavePaymentPlanAPIView
 from apps.integrations.payments.manual.manual_payment import \
     ManualPaymentAPIView
 from apps.integrations.payments.mpesa.mpesa import (LipaNaMpesaAPIView,
@@ -9,4 +11,5 @@ urlpatterns = [
     path("lipa-na-mpesa/", LipaNaMpesaAPIView.as_view(), name="lipa-na-mpesa"),
     path("lipa-na-mpesa-callback/", LipaNaMpesaCallbackAPIView.as_view(), name="lipa-na-mpesa-callback"),
     path("manual-payment/", ManualPaymentAPIView.as_view(), name="manual-payment"),
+    path("fluterwave-payment-plans/", FlutterWavePaymentPlanAPIView.as_view(), name="fluterwave-payment-plans"),
 ]

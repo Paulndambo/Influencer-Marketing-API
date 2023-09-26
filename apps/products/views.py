@@ -52,7 +52,7 @@ class ProductViewSet(ModelViewSet):
             )
             advert_order.calculate_promotion_bill(
                 product.promotion_period,
-                package_cost=product.promotion_package.charge_per_hour,
+                package_cost=product.promotion_package.charge_per_hour if product.promotion_package else 0,
                 period_in=product.promotion_period_in
             )
             #advert_order.save()

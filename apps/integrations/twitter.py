@@ -12,7 +12,6 @@ def print_key():
     print(f"Consumer Secret: {consumer_secret}")
 
 
-
 class TwitterConnector(object):
     def __init__(self, username):
         self.username = username
