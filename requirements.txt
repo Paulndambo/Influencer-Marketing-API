@@ -14,3 +14,4 @@ celery
 djangorestframework-csv
 requests
 python-decouple
+pytest-django
