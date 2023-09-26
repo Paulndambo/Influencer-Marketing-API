@@ -14,12 +14,12 @@ class WalletViewSet(ModelViewSet):
     serializer_class = WalletSerializer
     permission_classes = [IsAuthenticated]
 
-    #def get_queryset(self):
-    #    user = self.request.user
+    def get_queryset(self):
+        user = self.request.user
 
-    #    if user.is_superuser:
-    #        return self.queryset
-    #    return self.queryset.filter(user=user)
+        if user.is_superuser:
+            return self.queryset
+        return self.queryset.filter(user=user)
 
 
 class PaymentRecordViewSet(ModelViewSet):
@@ -27,12 +27,12 @@ class PaymentRecordViewSet(ModelViewSet):
     serializer_class = PaymentRecordSerializer
     permission_classes = [IsAuthenticated]
 
-   # def get_queryset(self):
-    #     user = self.request.user
+    def get_queryset(self):
+        user = self.request.user
 
-    #    if user.is_superuser:
-    #        return self.queryset
-    #    return self.queryset.filter(user=user)
+        if user.is_superuser:
+            return self.queryset
+        return self.queryset.filter(user=user)
 
 class BillingCategoryViewSet(ModelViewSet):
     queryset = BillingCategory.objects.all()
