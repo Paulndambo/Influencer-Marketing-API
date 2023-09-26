@@ -16,6 +16,8 @@ function hideAd() {
     adContainer.style.display = 'none';
 }
 
+document.getElementById("closeAdd").addEventListener("click", hideAd);
+
 // Function to shuffle the ads array
 function shuffleAds() {
     for (var i = ads.length - 1; i > 0; i--) {
@@ -51,7 +53,7 @@ function displayNextAd() {
         <img src="${currentAd.product_url}" alt="Ad Image" width="200" height="150">
         <p>${currentAd.name}</p>
         <p>
-            <a href="">Visit Site</a> <span> <button>Close Ad!</button> </span>
+            <a href="${currentAd.product_url}">Visit Site</a> <span> <button id="closeAd">Close Ad!</button> </span>
         </p>
     `;
     showAd();
